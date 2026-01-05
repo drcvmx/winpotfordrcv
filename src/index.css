@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Casino Color Palette */
+    --casino-red: 352 100% 58%;
+    --casino-gold: 45 100% 51%;
+    --casino-dark-gold: 49 82% 46%;
+    --casino-navy: 204 69% 8%;
+    --casino-dark-blue: 209 65% 11%;
+    --casino-card-bg: 209 64% 10%;
+    --casino-slate: 200 15% 73%;
+
+    /* Semantic mappings */
+    --background: 204 69% 8%;
+    --foreground: 0 0% 100%;
+
+    --card: 209 64% 10%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 209 65% 11%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 352 100% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 209 65% 11%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 209 64% 10%;
+    --muted-foreground: 200 15% 73%;
+
+    --accent: 45 100% 51%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 209 50% 15%;
+    --input: 209 50% 15%;
+    --ring: 45 100% 51%;
+
+    --radius: 0.5rem;
+
+    /* Dynamic Fonts & Gradients */
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Poppins', sans-serif;
+    --hero-gradient: linear-gradient(135deg, hsl(209 65% 11%) 0%, hsl(204 69% 8%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: var(--font-body, sans-serif);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .casino-card {
+    @apply bg-card border border-border rounded-xl;
+  }
+
+  .casino-button-gold {
+    @apply bg-casino-gold text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:brightness-110 hover:shadow-lg hover:shadow-casino-gold/20;
+  }
+
+  .casino-button-outline {
+    @apply border border-casino-gold text-casino-gold font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-casino-gold hover:text-black;
+  }
+
+  .casino-text-gradient {
+    @apply bg-gradient-to-r from-casino-gold to-casino-dark-gold bg-clip-text text-transparent;
+  }
+
+  .filter-pill-active {
+    @apply bg-casino-gold text-black font-medium;
+  }
+
+  .filter-pill-inactive {
+    @apply border border-casino-gold/50 text-casino-gold hover:border-casino-gold hover:bg-casino-gold/10;
+  }
+}
+
+@layer utilities {
+  .hero-gradient {
+    background: var(--hero-gradient);
+  }
+
+  .card-gradient {
+    background: linear-gradient(145deg, hsl(209 64% 10%) 0%, hsl(204 69% 6%) 100%);
+  }
+
+  .text-shadow-glow {
+    text-shadow: 0 0 30px hsl(352 100% 58% / 0.5);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-slow {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+  }
+}
