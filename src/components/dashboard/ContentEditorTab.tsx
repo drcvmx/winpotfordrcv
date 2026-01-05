@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTenant } from "@/context/TenantContext";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,11 @@ export default function ContentEditorTab() {
     // Local state for form to avoid re-rendering context on every keystroke
     // In a real app we'd use react-hook-form
     const [formData, setFormData] = useState<any>(content?.[selectedSection] || {});
+
+    // Sync formData with global content when tenant or section changes
+    useEffect(() => {
+        setFormData(content?.[selectedSection] || {});
+    }, [content, selectedSection]);
 
     const handleSave = () => {
         updateContent(selectedSection, formData);
