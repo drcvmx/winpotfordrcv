@@ -25,12 +25,21 @@ export function TenantProvider({ children }: { children: ReactNode }) {
 
     // Logic to detect tenant or switch logic
     useEffect(() => {
-        // 1. Detect Subdomain logic (For Production)
+        // 1. Detect Subdomain or Query Param (For Production/Vercel Previews)
         const hostname = window.location.hostname;
+        const searchParams = new URL(window.location.href).searchParams;
+        const tenantParam = searchParams.get('tenant');
+
         const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
 
-        // If we are in production (not localhost), we try to set tenantId from subdomain
-        if (!isLocalhost) {
+        // Priority 1: Query Param (Useful for Vercel Previews e.g. project.vercel.app?tenant=guadalajara)
+        if (tenantParam && TENANTS[tenantParam]) {
+            if (tenantId !== tenantParam) {
+                setTenantId(tenantParam);
+            }
+        }
+        // Priority 2: Subdomain (Production logic)
+        else if (!isLocalhost) {
             // "guadalajara.winpot.mx" -> "guadalajara"
             // "winpot.mx" -> "www" (or just verify if it matches main domain)
 
