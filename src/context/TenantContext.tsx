@@ -19,55 +19,41 @@ interface TenantContextType {
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
 export function TenantProvider({ children }: { children: ReactNode }) {
-    const [tenantId, setTenantId] = useState<string>('main');
+    // Initialize tenantId directly from URL Logic to prevent useEffect loops
+    // This allows the Dashboard dropdown to change the state without the URL forcing it back
+    const [tenantId, setTenantId] = useState<string>(() => {
+        if (typeof window === 'undefined') return 'main';
+
+        // 1. Check Query Param (Priority for Vercel Previews)
+        const searchParams = new URL(window.location.href).searchParams;
+        const tenantParam = searchParams.get('tenant');
+        if (tenantParam && TENANTS[tenantParam]) {
+            return tenantParam;
+        }
+
+        // 2. Check Subdomain (Production)
+        const hostname = window.location.hostname;
+        const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
+
+        if (!isLocalhost) {
+            const parts = hostname.split('.');
+            const subdomain = parts[0];
+            const candidateId = subdomain === 'www' ? 'main' : subdomain;
+            if (TENANTS[candidateId]) {
+                return candidateId;
+            }
+        }
+
+        // 3. Default
+        return 'main';
+    });
+
     const [currentData, setCurrentData] = useState<any>(CORPORATE_DATA);
 
 
-    // Logic to detect tenant or switch logic
+    // 2. Find Tenant Config (based on resolved tenantId)
+    // Effect to update data when tenantId changes (whether by init or dropdown)
     useEffect(() => {
-        // 1. Detect Subdomain or Query Param (For Production/Vercel Previews)
-        const hostname = window.location.hostname;
-        const searchParams = new URL(window.location.href).searchParams;
-        const tenantParam = searchParams.get('tenant');
-
-        const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
-
-        // Priority 1: Query Param (Useful for Vercel Previews e.g. project.vercel.app?tenant=guadalajara)
-        if (tenantParam && TENANTS[tenantParam]) {
-            if (tenantId !== tenantParam) {
-                setTenantId(tenantParam);
-            }
-        }
-        // Priority 2: Subdomain (Production logic)
-        else if (!isLocalhost) {
-            // "guadalajara.winpot.mx" -> "guadalajara"
-            // "winpot.mx" -> "www" (or just verify if it matches main domain)
-
-            const parts = hostname.split('.');
-            // Extremely simple subdomain extraction: just take the first part
-            // Adjust this logic if you use "www.guadalajara.winpot.mx" etc.
-            const subdomain = parts[0];
-
-            // Check if this subdomain matches a valid tenant ID
-            // We strip 'www' if present to allow www.winpot.mx to go to main
-            const candidateId = subdomain === 'www' ? 'main' : subdomain;
-
-            if (TENANTS[candidateId]) {
-                // Priority: subdomain > whatever state (in a real app)
-                // However, we want 'setTenantId' to still work for internal nav if needed, 
-                // but typically multi-tenant apps are strict. 
-                // For now, we ONLY set it if it's different to prevent loops, 
-                // and we trust the URL source of truth.
-                if (tenantId !== candidateId) {
-                    setTenantId(candidateId);
-                }
-            } else {
-                // If subdomain unknown (e.g. "admin.winpot.mx"), fallback to main or error page
-                if (tenantId !== 'main') setTenantId('main');
-            }
-        }
-
-        // 2. Find Tenant Config (based on resolved tenantId)
         const tenantConfig = TENANTS[tenantId] || TENANTS.main;
 
         // 3. Find Brand Theme
