@@ -7,16 +7,25 @@ import { Heading } from "@/components/ui/typography";
 
 import { useTenant } from "@/context/TenantContext";
 
+const defaultProviders = [
+    { name: "Aurify", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/Aurify.webp" },
+    { name: "AGS", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/ags-1.webp" },
+    { name: "Dreidel", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/dreidel-1.webp" },
+    { name: "EGT", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/EGT-1.webp" },
+    { name: "FBM", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/fbm.webp" },
+    { name: "IGT", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/igt-1.webp" },
+    { name: "Zitro", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/zitro-1.webp" },
+    { name: "Ainsworth", logo: "https://tuxtla.winpotcasinos.com.mx/wp-content/uploads/2025/08/Ainsworth-1.webp" },
+];
+
 export function ProvidersSection() {
     const { content } = useTenant();
-    const providersList = content?.games?.providers?.list;
+    const providersList = content?.games?.providers?.list || defaultProviders;
 
     const [emblaRef] = useEmblaCarousel(
         { loop: true, align: "start", dragFree: true },
         [Autoplay({ delay: 2000, stopOnInteraction: false })]
     );
-
-    if (!providersList || providersList.length === 0) return null;
 
     return (
         <SectionWrapper background="muted" padding="lg">
