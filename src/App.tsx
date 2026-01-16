@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import TenantPage from "./pages/TenantPage";
 import Dashboard from "./pages/Dashboard";
-import Auth from "./pages/Auth";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import { TenantProvider } from "@/context/TenantContext";
 
@@ -23,8 +23,8 @@ const App = () => (
             {/* Corporate Home */}
             <Route path="/" element={<Index />} />
             
-            {/* Authentication */}
-            <Route path="/auth" element={<Auth />} />
+            {/* Login */}
+            <Route path="/login" element={<Login />} />
             
             {/* Dashboard */}
             <Route path="/dashboard" element={<Dashboard />} />
