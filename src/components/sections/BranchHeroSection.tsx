@@ -3,16 +3,20 @@ import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { useTenant } from "@/context/TenantContext";
 import { PokerChip, PlayingCard, RouletteWheel, Dice } from "@/components/ui/casino-decorations";
+import { useTenantImage } from "@/hooks/useTenantImages";
 
 export function BranchHeroSection() {
-    const { content, tenantId } = useTenant();
+    const { content, tenantId, theme } = useTenant();
+    const { data: heroImageData } = useTenantImage(tenantId, 'hero');
+    
     if (!content.hero) return null;
 
     const { hero } = content;
-    const { theme } = useTenant(); // Get theme to check brand
     const isVeneto = tenantId === 'interlomas';
-    // Apply corporate styling to both Winpot Standard and Diamonds
     const isCorporateStyle = theme.id === 'winpot' || theme.id === 'diamonds';
+    
+    // Use DB image if available, otherwise fallback to mock data
+    const heroImage = heroImageData?.image_url || hero.image;
 
     return (
         <SectionWrapper id="inicio" background="gradient" padding="none" className="min-h-[600px] lg:min-h-[800px] pt-32 pb-20 hero-gradient overflow-hidden relative flex items-center">
@@ -160,8 +164,8 @@ export function BranchHeroSection() {
                             {/* Glow behind image for Veneto */}
                             {isVeneto && <div className="absolute inset-0 bg-primary opacity-40 blur-3xl scale-110" />}
                             <img
-                                src={hero.image}
-                                alt={`${hero.title} ${hero.subtitle} - Casino`}
+                                src={heroImage}
+                                alt={heroImageData?.alt_text || `${hero.title} ${hero.subtitle} - Casino`}
                                 className="w-full max-w-2xl drop-shadow-2xl relative z-10"
                             />
                         </div>

@@ -2,9 +2,20 @@ import { motion } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
-import aboutBanner from "@/assets/about-banner.webp";
+import { useTenant } from "@/context/TenantContext";
+import { useTenantImage } from "@/hooks/useTenantImages";
+import aboutBannerFallback from "@/assets/about-banner.webp";
 
 export function AboutSection() {
+  const { tenantId, content } = useTenant();
+  const { data: aboutImageData } = useTenantImage(tenantId, 'about');
+  
+  // Use DB image if available, then content.about.image, then fallback asset
+  const aboutImage = aboutImageData?.image_url 
+    || (typeof content?.about?.image === 'string' ? content.about.image : content?.about?.image?.url)
+    || aboutBannerFallback;
+  const aboutAlt = aboutImageData?.alt_text || "Winpot Casino - Acerca de nosotros";
+
   return (
     <SectionWrapper id="nosotros" background="default">
       <Container>
@@ -45,8 +56,8 @@ export function AboutSection() {
             className="relative flex justify-end"
           >
             <img
-              src={aboutBanner}
-              alt="Winpot Casino - Acerca de nosotros"
+              src={aboutImage}
+              alt={aboutAlt}
               className="w-full max-w-lg rounded-lg"
             />
           </motion.div>
