@@ -11,6 +11,10 @@ export interface TenantEvent {
   event_date: string | null;
   is_active: boolean;
   display_order: number;
+  is_recurring: boolean;
+  recurrence_type: string | null; // 'weekly', 'daily', 'monthly'
+  recurrence_day: number | null; // 0=Sunday, 1=Monday... 6=Saturday
+  recurrence_text: string | null; // "Todos los martes a las 8pm"
   created_at: string;
   updated_at: string;
 }
@@ -24,6 +28,10 @@ export interface TenantEventInput {
   event_date?: string;
   is_active?: boolean;
   display_order?: number;
+  is_recurring?: boolean;
+  recurrence_type?: string;
+  recurrence_day?: number;
+  recurrence_text?: string;
 }
 
 // Fetch events for a specific tenant
@@ -59,9 +67,13 @@ export function useUpsertTenantEvent() {
             title: input.title,
             description: input.description,
             image_url: input.image_url,
-            event_date: input.event_date,
+            event_date: input.event_date || null,
             is_active: input.is_active,
             display_order: input.display_order,
+            is_recurring: input.is_recurring ?? false,
+            recurrence_type: input.recurrence_type || null,
+            recurrence_day: input.recurrence_day ?? null,
+            recurrence_text: input.recurrence_text || null,
           })
           .eq('id', input.id)
           .select()
@@ -78,9 +90,13 @@ export function useUpsertTenantEvent() {
             title: input.title,
             description: input.description,
             image_url: input.image_url,
-            event_date: input.event_date,
+            event_date: input.event_date || null,
             is_active: input.is_active ?? true,
             display_order: input.display_order ?? 0,
+            is_recurring: input.is_recurring ?? false,
+            recurrence_type: input.recurrence_type || null,
+            recurrence_day: input.recurrence_day ?? null,
+            recurrence_text: input.recurrence_text || null,
           })
           .select()
           .single();
@@ -138,3 +154,20 @@ export function useDeleteTenantEvent() {
     },
   });
 }
+
+// Helper to get day name in Spanish
+export const DAYS_OF_WEEK = [
+  { value: 0, label: 'Domingo' },
+  { value: 1, label: 'Lunes' },
+  { value: 2, label: 'Martes' },
+  { value: 3, label: 'Miércoles' },
+  { value: 4, label: 'Jueves' },
+  { value: 5, label: 'Viernes' },
+  { value: 6, label: 'Sábado' },
+];
+
+export const RECURRENCE_TYPES = [
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'daily', label: 'Diario' },
+  { value: 'monthly', label: 'Mensual' },
+];

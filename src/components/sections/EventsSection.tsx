@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, PartyPopper, Clock, MapPin, Trophy } from "lucide-react";
+import { Calendar, PartyPopper, Clock, MapPin, Trophy, Repeat } from "lucide-react";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
@@ -76,7 +76,14 @@ export function EventsSection() {
                                 {/* Event Content */}
                                 <div className="p-6 lg:p-8 flex flex-col justify-center">
                                     <h3 className="text-2xl lg:text-3xl font-bold text-primary mb-2">{event.title}</h3>
-                                    {event.event_date && (
+                                    
+                                    {/* Show recurrence text OR specific date */}
+                                    {event.is_recurring && event.recurrence_text ? (
+                                        <p className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                                            <Repeat className="h-5 w-5 text-blue-400" />
+                                            {event.recurrence_text}
+                                        </p>
+                                    ) : event.event_date ? (
                                         <p className="text-lg font-semibold text-foreground mb-4">
                                             📅 {new Date(event.event_date).toLocaleDateString('es-MX', { 
                                                 weekday: 'long', 
@@ -85,7 +92,8 @@ export function EventsSection() {
                                                 day: 'numeric' 
                                             })}
                                         </p>
-                                    )}
+                                    ) : null}
+                                    
                                     {event.description && (
                                         <Text textColor="muted">{event.description}</Text>
                                     )}
