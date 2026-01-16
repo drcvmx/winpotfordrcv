@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import winpotLogo from "@/assets/winpot-logo.svg";
+import { useAuth } from "@/hooks/useAuth";
+import { Loader2, LogOut } from "lucide-react";
 
 // Tab content components
 import ContentEditorTab from "@/components/dashboard/ContentEditorTab";
@@ -12,6 +16,47 @@ const tabs = [
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("editor");
+  const navigate = useNavigate();
+  const { user, isLoading, isEditor, signOut } = useAuth();
+
+  // Redirect if not authenticated or not authorized
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, isLoading, navigate]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-casino-gold" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  if (!isEditor()) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acceso Denegado</h1>
+          <p className="text-muted-foreground mb-6">No tienes permisos para acceder al Dashboard.</p>
+          <Button onClick={handleSignOut} variant="outline">
+            <LogOut className="mr-2 h-4 w-4" />
+            Cerrar Sesión
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,12 +88,24 @@ const Dashboard = () => {
               {/* Decorative gradient accent */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-casino-gold via-casino-dark-gold to-casino-gold" />
 
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Hola <span className="casino-text-gradient">Administrador</span>,
-              </h1>
-              <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-                Bienvenido al panel de control. Desde aquí puedes gestionar el contenido de todas las sucursales de manera centralizada.
-              </p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                    Hola <span className="casino-text-gradient">{user.email}</span>,
+                  </h1>
+                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
+                    Bienvenido al panel de control. Desde aquí puedes gestionar el contenido de todas las sucursales de manera centralizada.
+                  </p>
+                </div>
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="shrink-0 border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Salir
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>
