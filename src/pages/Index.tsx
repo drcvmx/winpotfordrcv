@@ -6,11 +6,12 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { BrandsSection } from "@/components/sections/BrandsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { Footer } from "@/components/sections/Footer";
+import DevSwitcher from "@/components/DevSwitcher";
 
 const Index = () => {
-  // Corporate View - Always shows the main/corporate content
   return (
     <div className="min-h-screen bg-background">
+      <DevSwitcher />
       <Navbar />
       <HeroSection />
       <FeaturesSection />
