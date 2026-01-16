@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { CasinoType } from "@/types";
 import { ContentCard } from "@/components/ui/content-card";
 import { Heading, Text } from "@/components/ui/typography";
@@ -62,14 +63,12 @@ export function CasinoCard({ casino }: CasinoCardProps) {
           </Text>
 
           <div className="flex flex-col gap-2">
-            <a
-              href={casino.externalLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-casino-gold hover:bg-casino-gold/90 text-casino-black font-semibold px-8 py-3 rounded transition-all text-sm"
+            <Link
+              to={`/${casino.id}`}
+              className="inline-block bg-casino-gold hover:bg-casino-gold/90 text-casino-black font-semibold px-8 py-3 rounded transition-all text-sm text-center"
             >
               Visitar Sitio
-            </a>
+            </Link>
             <a
               href={casino.googleMapsUrl}
               target="_blank"
