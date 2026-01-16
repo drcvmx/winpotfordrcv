@@ -3,9 +3,18 @@ import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/typography";
 import { ContactForm } from "@/components/domain/ContactForm";
-import rouletteImage from "@/assets/roulette-contact.png";
+import { useTenant } from "@/context/TenantContext";
+import { useTenantImage } from "@/hooks/useTenantImages";
+import rouletteImageFallback from "@/assets/roulette-contact.png";
 
 export function ContactSection() {
+  const { tenantId } = useTenant();
+  const { data: contactImageData } = useTenantImage(tenantId, 'contact');
+  
+  // Use DB image if available, otherwise fallback to local asset
+  const contactImage = contactImageData?.image_url || rouletteImageFallback;
+  const contactAlt = contactImageData?.alt_text || "Ruleta de casino";
+
   return (
     <SectionWrapper id="contacto" background="secondary">
       <Container>
@@ -19,8 +28,8 @@ export function ContactSection() {
             className="relative rounded-lg overflow-hidden"
           >
             <img
-              src={rouletteImage}
-              alt="Ruleta de casino"
+              src={contactImage}
+              alt={contactAlt}
               className="w-full h-auto object-cover"
             />
           </motion.div>

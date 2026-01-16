@@ -6,9 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";  // Assuming you have this or use Input for now
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { TENANTS } from "@/data/mock-tenant";
+import ImageEditorSection from "./ImageEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId, content, updateContent } = useTenant();
@@ -73,9 +75,26 @@ export default function ContentEditorTab() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Sidebar */}
-                <div className="lg:col-span-1 space-y-2">
+            <Tabs defaultValue="images" className="w-full">
+                <TabsList className="w-full justify-start bg-card border border-border">
+                    <TabsTrigger value="images" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                        📷 Imágenes (DB)
+                    </TabsTrigger>
+                    <TabsTrigger value="content" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                        📝 Contenido (Local)
+                    </TabsTrigger>
+                </TabsList>
+
+                {/* Images Tab - Database Powered */}
+                <TabsContent value="images" className="mt-6">
+                    <ImageEditorSection tenantId={tenantId} />
+                </TabsContent>
+
+                {/* Content Tab - LocalStorage (Legacy) */}
+                <TabsContent value="content" className="mt-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        {/* Sidebar */}
+                        <div className="lg:col-span-1 space-y-2">
                     <Button
                         variant={selectedSection === 'hero' ? 'default' : 'ghost'}
                         className="w-full justify-start"
@@ -327,8 +346,10 @@ export default function ContentEditorTab() {
                             <Button className="w-full mt-4" onClick={handleSave}>Guardar Cambios</Button>
                         </CardContent>
                     </Card>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
