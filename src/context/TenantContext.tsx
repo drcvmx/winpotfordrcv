@@ -1,5 +1,5 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { TENANTS, BRAND_THEMES, CORPORATE_DATA } from "@/data/mock-tenant";
 import { TenantConfig, BrandTheme } from "@/types/tenant";
 
@@ -19,48 +19,52 @@ interface TenantContextType {
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
 export function TenantProvider({ children }: { children: ReactNode }) {
-    // Initialize tenantId directly from URL Logic to prevent useEffect loops
-    // This allows the Dashboard dropdown to change the state without the URL forcing it back
-    const [tenantId, setTenantId] = useState<string>(() => {
-        if (typeof window === 'undefined') return 'main';
-
-        // 1. Check Query Param (Priority for Vercel Previews)
-        const searchParams = new URL(window.location.href).searchParams;
-        const tenantParam = searchParams.get('tenant');
-        if (tenantParam && TENANTS[tenantParam]) {
-            return tenantParam;
-        }
-
-        // 2. Check Subdomain (Production)
-        const hostname = window.location.hostname;
-        const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
-
-        if (!isLocalhost) {
-            const parts = hostname.split('.');
-            const subdomain = parts[0];
-            const candidateId = subdomain === 'www' ? 'main' : subdomain;
-            if (TENANTS[candidateId]) {
-                return candidateId;
+    const location = useLocation();
+    
+    // Extract tenant from URL path: /tuxtla -> tuxtla, / -> main
+    const getTenantFromPath = (): string => {
+        const pathSegments = location.pathname.split('/').filter(Boolean);
+        
+        // Skip dashboard and other reserved routes
+        const reservedRoutes = ['dashboard'];
+        if (pathSegments.length > 0 && !reservedRoutes.includes(pathSegments[0])) {
+            const potentialTenant = pathSegments[0];
+            if (TENANTS[potentialTenant]) {
+                return potentialTenant;
             }
         }
-
-        // 3. Default
+        
+        // Fallback: Check query param for preview/dev
+        if (typeof window !== 'undefined') {
+            const searchParams = new URLSearchParams(window.location.search);
+            const tenantParam = searchParams.get('tenant');
+            if (tenantParam && TENANTS[tenantParam]) {
+                return tenantParam;
+            }
+        }
+        
         return 'main';
-    });
+    };
 
+    const [tenantId, setTenantId] = useState<string>(getTenantFromPath);
     const [currentData, setCurrentData] = useState<any>(CORPORATE_DATA);
 
+    // Update tenant when path changes
+    useEffect(() => {
+        const newTenantId = getTenantFromPath();
+        if (newTenantId !== tenantId) {
+            setTenantId(newTenantId);
+        }
+    }, [location.pathname]);
 
-    // 2. Find Tenant Config (based on resolved tenantId)
-    // Effect to update data when tenantId changes (whether by init or dropdown)
+    // Effect to update data when tenantId changes
     useEffect(() => {
         const tenantConfig = TENANTS[tenantId] || TENANTS.main;
 
-        // 3. Find Brand Theme
+        // Find Brand Theme
         const brandTheme = BRAND_THEMES[tenantConfig.brandId] || BRAND_THEMES.winpot;
 
-        // 4. Merge them
-        // We ensure 'type' is set for the layouts (corporate vs branch)
+        // Merge them - 'main' is corporate, everything else is branch
         const type: TenantType = tenantId === 'main' ? 'corporate' : 'branch';
 
         const baseData = {
@@ -69,7 +73,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
             type: type,
         };
 
-        // 5. Load from LocalStorage to persist content edits (CMS feature)
+        // Load from LocalStorage to persist content edits (CMS feature)
         const savedData = localStorage.getItem(`tenant_data_${tenantId}`);
         if (savedData) {
             try {

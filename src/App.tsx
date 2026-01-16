@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import TenantPage from "./pages/TenantPage";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { TenantProvider } from "@/context/TenantContext";
@@ -12,20 +13,27 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TenantProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <BrowserRouter>
+      <TenantProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
           <Routes>
+            {/* Corporate Home */}
             <Route path="/" element={<Index />} />
+            
+            {/* Dashboard */}
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            
+            {/* Dynamic Tenant Routes: /tuxtla, /boca, /interlomas, etc. */}
+            <Route path="/:tenantId" element={<TenantPage />} />
+            
+            {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </TenantProvider>
+        </TooltipProvider>
+      </TenantProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
