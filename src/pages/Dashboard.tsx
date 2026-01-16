@@ -22,13 +22,13 @@ const Dashboard = () => {
   // Redirect if not authenticated or not authorized
   useEffect(() => {
     if (!isLoading && !user) {
-      navigate('/auth');
+      navigate('/login');
     }
   }, [user, isLoading, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/auth');
+    navigate('/login');
   };
 
   if (isLoading) {

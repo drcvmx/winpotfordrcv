@@ -15,7 +15,7 @@ const loginSchema = z.object({
   password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
 });
 
-export default function Auth() {
+export default function Login() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading, signIn, signUp } = useAuth();
   const { toast } = useToast();
