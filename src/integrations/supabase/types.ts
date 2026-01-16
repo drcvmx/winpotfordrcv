@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      tenant_content: {
+        Row: {
+          contact_email: string | null
+          contact_hours: string | null
+          contact_phone: string | null
+          created_at: string
+          hero_address: string | null
+          hero_cta_primary_link: string | null
+          hero_cta_primary_text: string | null
+          hero_cta_secondary_link: string | null
+          hero_cta_secondary_text: string | null
+          hero_schedule: string | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_hours?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          hero_address?: string | null
+          hero_cta_primary_link?: string | null
+          hero_cta_primary_text?: string | null
+          hero_cta_secondary_link?: string | null
+          hero_cta_secondary_text?: string | null
+          hero_schedule?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string | null
+          contact_hours?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          hero_address?: string | null
+          hero_cta_primary_link?: string | null
+          hero_cta_primary_text?: string | null
+          hero_cta_secondary_link?: string | null
+          hero_cta_secondary_text?: string | null
+          hero_schedule?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tenant_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          event_date: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tenant_images: {
         Row: {
           alt_text: string | null
