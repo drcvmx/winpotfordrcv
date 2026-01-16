@@ -83,6 +83,10 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean | null
+          is_recurring: boolean | null
+          recurrence_day: number | null
+          recurrence_text: string | null
+          recurrence_type: string | null
           tenant_id: string
           title: string
           updated_at: string
@@ -95,6 +99,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          is_recurring?: boolean | null
+          recurrence_day?: number | null
+          recurrence_text?: string | null
+          recurrence_type?: string | null
           tenant_id: string
           title: string
           updated_at?: string
@@ -107,6 +115,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          is_recurring?: boolean | null
+          recurrence_day?: number | null
+          recurrence_text?: string | null
+          recurrence_type?: string | null
           tenant_id?: string
           title?: string
           updated_at?: string
