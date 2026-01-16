@@ -19,6 +19,7 @@ import { AwardsSection } from "@/components/sections/AwardsSection";
 import { FacilitiesSection } from "@/components/sections/FacilitiesSection";
 import { ProvidersSection } from "@/components/sections/ProvidersSection";
 import { LocationSection } from "@/components/sections/LocationSection";
+import DevSwitcher from "@/components/DevSwitcher";
 
 const TenantPage = () => {
   const { tenantId: urlTenantId } = useParams<{ tenantId: string }>();
@@ -40,6 +41,7 @@ const TenantPage = () => {
   if (tenant === 'branch') {
     return (
       <div className="min-h-screen bg-background">
+        <DevSwitcher />
         <Navbar />
         <BranchHeroSection />
         <GamesSection />
@@ -59,6 +61,7 @@ const TenantPage = () => {
   // Corporate View (fallback)
   return (
     <div className="min-h-screen bg-background">
+      <DevSwitcher />
       <Navbar />
       <HeroSection />
       <FeaturesSection />
