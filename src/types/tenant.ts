@@ -74,7 +74,7 @@ export interface TenantContent {
             href: string;
             variant?: 'primary' | 'secondary' | 'outline';
         }>;
-        floatingImages?: Array<{ url: string; alt: string } | string>;
+        
     };
     events?: {
         title: string;

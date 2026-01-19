@@ -805,8 +805,7 @@ export const TENANTS: Record<string, TenantConfig> = {
                 ctaButtons: [
                     { text: "Ver Ubicación", href: "#ubicacion", variant: "primary" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "secondary" }
-                ],
-                floatingImages: []
+                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Plaza+Mandarin+Benito+Juarez+Mexicali",
@@ -931,8 +930,7 @@ export const TENANTS: Record<string, TenantConfig> = {
                 ctaButtons: [
                     { text: "Ver Ubicación", href: "#ubicacion", variant: "outline" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "primary" }
-                ],
-                floatingImages: []
+                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Plaza+Las+Americas+Merida+Yucatan",
@@ -1055,8 +1053,7 @@ export const TENANTS: Record<string, TenantConfig> = {
                 ctaButtons: [
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "outline" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "primary" }
-                ],
-                floatingImages: []
+                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Av+Lopez+Mateos+Sur+3333+Zapopan+Jalisco",
@@ -1174,8 +1171,7 @@ export const TENANTS: Record<string, TenantConfig> = {
                 ctaButtons: [
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "outline" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "primary" }
-                ],
-                floatingImages: []
+                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Av+Tecnologico+1600+Metepec+Estado+Mexico",
@@ -1311,10 +1307,6 @@ export const TENANTS: Record<string, TenantConfig> = {
                     full: "Plaza Gran Patio, Carr. Poza Rica - Cazones Km. 50, La Rueda, 93306 Poza Rica de Hidalgo, Ver.",
                     landmark: "Gran Patio Poza Rica"
                 },
-                floatingImages: [
-                    { url: "/decorations/diamonds-flotante-1.webp", alt: "Ruleta" },
-                    { url: "/decorations/diamonds-flotante-2.webp", alt: "Cartas" }
-                ],
                 ctaButtons: [
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "secondary" }
                 ]
@@ -1395,10 +1387,6 @@ export const TENANTS: Record<string, TenantConfig> = {
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "secondary" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "primary" }
                 ],
-                floatingImages: [
-                    { url: "/decorations/diamonds-flotante-1.webp", alt: "Ruleta" },
-                    { url: "/decorations/diamonds-flotante-2.webp", alt: "Cartas" }
-                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Av+Patria+1020+Jardines+Tepeyac+Zapopan+Jalisco",
@@ -1517,10 +1505,6 @@ export const TENANTS: Record<string, TenantConfig> = {
                     full: "Av. Circunvalación Jorge Álvarez del Castillo 1846, Lomas del Country, Guadalajara.",
                     landmark: "Lomas del Country"
                 },
-                floatingImages: [
-                    { url: "/decorations/capri-flotante-1.webp", alt: "Fichas" },
-                    { url: "/decorations/capri-flotante-2.webp", alt: "Ruleta" }
-                ],
                 ctaButtons: [
                     { text: "¿CÓMO LLEGAR?", href: "#ubicacion" }
                 ]
@@ -1603,10 +1587,6 @@ export const TENANTS: Record<string, TenantConfig> = {
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "primary" },
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "secondary" }
                 ],
-                floatingImages: [
-                    { url: "/decorations/capri-flotante-1.webp", alt: "Fichas" },
-                    { url: "/decorations/capri-flotante-2.webp", alt: "Ruleta" }
-                ]
             },
             contact: {
                 googleMaps: "https://www.google.com/maps/search/?api=1&query=Blvd+Manuel+Avila+Camacho+2245+Tlalnepantla+Estado+de+Mexico",
