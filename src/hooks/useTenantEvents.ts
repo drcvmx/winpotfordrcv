@@ -9,10 +9,11 @@ export interface TenantEvent {
   description: string | null;
   image_url: string | null;
   event_date: string | null;
+  event_dates: string[] | null; // Array of specific dates (e.g., ["2025-07-08", "2025-07-20"])
   is_active: boolean;
   display_order: number;
   is_recurring: boolean;
-  recurrence_type: string | null; // 'weekly', 'daily', 'monthly'
+  recurrence_type: string | null; // 'weekly', 'daily', 'monthly', 'specific-dates'
   recurrence_day: number | null; // 0=Sunday, 1=Monday... 6=Saturday (legacy, single day)
   recurrence_days: number[] | null; // Array of days for multi-day events
   recurrence_text: string | null; // "Todos los martes a las 8pm"
@@ -27,6 +28,7 @@ export interface TenantEventInput {
   description?: string;
   image_url?: string;
   event_date?: string;
+  event_dates?: string[];
   is_active?: boolean;
   display_order?: number;
   is_recurring?: boolean;
@@ -70,6 +72,7 @@ export function useUpsertTenantEvent() {
             description: input.description,
             image_url: input.image_url,
             event_date: input.event_date || null,
+            event_dates: input.event_dates || null,
             is_active: input.is_active,
             display_order: input.display_order,
             is_recurring: input.is_recurring ?? false,
@@ -94,6 +97,7 @@ export function useUpsertTenantEvent() {
             description: input.description,
             image_url: input.image_url,
             event_date: input.event_date || null,
+            event_dates: input.event_dates || null,
             is_active: input.is_active ?? true,
             display_order: input.display_order ?? 0,
             is_recurring: input.is_recurring ?? false,
@@ -177,6 +181,21 @@ export const RECURRENCE_TYPES = [
   { value: 'daily', label: 'Diario' },
   { value: 'monthly', label: 'Mensual' },
 ];
+
+// Helper to format multiple dates as readable text
+export function formatMultipleDates(dates: string[]): string {
+  if (!dates || dates.length === 0) return '';
+  
+  const sortedDates = [...dates].sort();
+  const formatted = sortedDates.map(d => {
+    const date = new Date(d + 'T00:00:00');
+    return date.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' });
+  });
+  
+  if (formatted.length === 1) return formatted[0];
+  const last = formatted.pop();
+  return `${formatted.join(', ')} y ${last}`;
+}
 
 // Helper to generate recurrence text from selected days
 export function generateRecurrenceText(days: number[]): string {
