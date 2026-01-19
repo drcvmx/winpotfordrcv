@@ -1269,6 +1269,170 @@ export const TENANTS: Record<string, TenantConfig> = {
     },
 
     // ------------------------------------------------------------
+    // WINPOT GUAYMAS
+    // ------------------------------------------------------------
+    guaymas: {
+        id: 'guaymas',
+        brandId: 'winpot',
+        content: {
+            metadata: {
+                title: "Winpot Guaymas",
+                description: "El mejor entretenimiento de Sonora. ¡Ven y disfruta de la emoción en Guaymas!",
+                city: "Guaymas",
+                state: "Sonora"
+            },
+            hero: {
+                title: "Winpot",
+                subtitle: "GUAYMAS",
+                description: "El mejor entretenimiento de Sonora. ¡Ven y disfruta de la emoción en Guaymas!",
+                image: "https://guaymas.winpotcasinos.com.mx/wp-content/uploads/2025/07/winpot-metrocentro-hero-2.webp",
+                schedule: { weekdays: "Lunes a Domingo de 09:00 am a 02:00 am" },
+                address: {
+                    full: "Blvd. Benito Juárez 900, Guadalupe, 85440 Guaymas, Son.",
+                    landmark: "Boulevard Benito Juárez"
+                },
+                ctaButtons: [
+                    { text: "Ver Ubicación", href: "#ubicacion", variant: "primary" },
+                    { text: "Jugar Online", href: "https://winpot.mx/", variant: "secondary" }
+                ]
+            },
+            contact: {
+                googleMaps: "https://www.google.com/maps/search/?api=1&query=Benito+Juarez+900+Guaymas+Sonora",
+                mapEmbed: "",
+                phone: "+52 622 123 4567",
+                socialMedia: [
+                    { platform: "facebook", url: "https://www.facebook.com/winpotcasinos", icon: "facebook" },
+                    { platform: "instagram", url: "https://www.instagram.com/winpotcasinos", icon: "instagram" }
+                ]
+            },
+            features: [
+                { id: "sonora", title: "El Mejor de Sonora", description: "Entretenimiento de primera en Guaymas", icon: "trophy" },
+                { id: "horario", title: "Horario Extendido", description: "Abierto hasta las 2:00 am", icon: "clock" },
+                { id: "ubicacion", title: "Ubicación Central", description: "En el Boulevard Benito Juárez", icon: "map-pin" },
+                { id: "juegos", title: "Variedad de Juegos", description: "Las mejores máquinas del mercado", icon: "gamepad" }
+            ],
+            games: {
+                title: "NUESTROS JUEGOS",
+                subtitle: "Descubre nuestra selección de juegos de última generación",
+                layout: "rows",
+                providers: {
+                    layout: "grid",
+                    list: SHARED_PROVIDERS
+                },
+                newGames: { title: "JUEGOS NUEVOS", items: [] },
+                topGames: { title: "JUEGOS TOP", items: [] }
+            },
+            events: {
+                title: "EVENTOS Y PROMOCIONES",
+                subtitle: "Vive la emoción con nuestros eventos",
+                layout: "featured",
+                items: []
+            },
+            about: {
+                title: "ACERCA DEL CASINO",
+                content: "Somos una empresa enfocada en brindar a nuestros clientes la mejor experiencia de entretenimiento. Con más de 15 años de experiencia en el mercado.",
+                image: "https://guaymas.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-banner-nosotros-2-1024x903.webp",
+                stats: [
+                    { value: "15+", label: "Años de experiencia" },
+                    { value: "18", label: "Establecimientos" }
+                ]
+            },
+            facilities: { images: [] },
+            navigation: {
+                menuItems: [
+                    { name: "Inicio", href: "#inicio" },
+                    { name: "Juegos", href: "#juegos" },
+                    { name: "Eventos", href: "#eventos" },
+                    { name: "Ubicación", href: "#ubicacion" },
+                    { name: "Contacto", href: "#contacto" }
+                ]
+            }
+        }
+    },
+
+    // ------------------------------------------------------------
+    // WINPOT MEXICALI CARRANZA
+    // ------------------------------------------------------------
+    carranza: {
+        id: 'carranza',
+        brandId: 'winpot',
+        content: {
+            metadata: {
+                title: "Winpot Mexicali Carranza",
+                description: "La mejor experiencia de casino en Mexicali. ¡Abierto las 24 horas para tu diversión!",
+                city: "Mexicali",
+                state: "Baja California"
+            },
+            hero: {
+                title: "Winpot",
+                subtitle: "MEXICALI CARRANZA",
+                description: "La mejor experiencia de casino en Mexicali. ¡Abierto las 24 horas para tu diversión!",
+                image: "https://mexicali.winpotcasinos.com.mx/wp-content/uploads/2025/07/winpot-metrocentro-hero-2.webp",
+                schedule: { weekdays: "Lunes a Domingo Abierto las 24 hrs." },
+                address: {
+                    full: "Blvd. Lázaro Cárdenas 2000, Plutarco Elías Calles, 21376 Mexicali, B.C.",
+                    landmark: "Boulevard Lázaro Cárdenas"
+                },
+                ctaButtons: [
+                    { text: "Ver Ubicación", href: "#ubicacion", variant: "primary" },
+                    { text: "Jugar Online", href: "https://winpot.mx/", variant: "secondary" }
+                ]
+            },
+            contact: {
+                googleMaps: "https://www.google.com/maps/search/?api=1&query=Lazaro+Cardenas+2000+Mexicali+Baja+California",
+                mapEmbed: "",
+                phone: "+52 686 123 4567",
+                socialMedia: [
+                    { platform: "facebook", url: "https://www.facebook.com/winpotcasinos", icon: "facebook" },
+                    { platform: "instagram", url: "https://www.instagram.com/winpotcasinos", icon: "instagram" }
+                ]
+            },
+            features: [
+                { id: "24hrs", title: "Abierto 24 Horas", description: "Servicio todos los días las 24 hrs.", icon: "clock" },
+                { id: "mexicali", title: "Lo Mejor de Mexicali", description: "Segunda ubicación en la ciudad", icon: "sparkles" },
+                { id: "ubicacion", title: "Blvd. Lázaro Cárdenas", description: "Fácil acceso y estacionamiento", icon: "map-pin" },
+                { id: "juegos", title: "Gran Variedad", description: "Máquinas de primera clase", icon: "trophy" }
+            ],
+            games: {
+                title: "NUESTROS JUEGOS",
+                subtitle: "Descubre nuestra selección de juegos de última generación",
+                layout: "rows",
+                providers: {
+                    layout: "grid",
+                    list: SHARED_PROVIDERS
+                },
+                newGames: { title: "JUEGOS NUEVOS", items: [] },
+                topGames: { title: "JUEGOS TOP", items: [] }
+            },
+            events: {
+                title: "EVENTOS Y PROMOCIONES",
+                subtitle: "Vive la emoción con nuestros eventos",
+                layout: "featured",
+                items: []
+            },
+            about: {
+                title: "ACERCA DEL CASINO",
+                content: "Somos una empresa enfocada en brindar a nuestros clientes la mejor experiencia de entretenimiento. Con más de 15 años de experiencia en el mercado.",
+                image: "https://mexicali.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-banner-nosotros-2-1024x903.webp",
+                stats: [
+                    { value: "15+", label: "Años de experiencia" },
+                    { value: "18", label: "Establecimientos" }
+                ]
+            },
+            facilities: { images: [] },
+            navigation: {
+                menuItems: [
+                    { name: "Inicio", href: "#inicio" },
+                    { name: "Juegos", href: "#juegos" },
+                    { name: "Eventos", href: "#eventos" },
+                    { name: "Ubicación", href: "#ubicacion" },
+                    { name: "Contacto", href: "#contacto" }
+                ]
+            }
+        }
+    },
+
+    // ------------------------------------------------------------
     // DIAMONDS POZA RICA
     // ------------------------------------------------------------
     pozarica: {
