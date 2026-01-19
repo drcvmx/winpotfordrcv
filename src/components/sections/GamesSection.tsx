@@ -3,79 +3,12 @@ import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
+import { useTenantGames } from "@/hooks/useTenantGames";
 import { Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-
-// Mapeo de nombres de juegos a imágenes locales
-const GAME_IMAGE_MAP: Record<string, string> = {
-    // Nombres comunes
-    "bao zhu zao fu": "/games/bao-zhu-zao-fu.webp",
-    "bao zhu zhao": "/games/bao-zhu-zhao.webp",
-    "epic empires": "/games/epic-empires.webp",
-    "gallina huevos de oro": "/games/gallina-huevos-oro.webp",
-    "la gallina de los huevos de oro": "/games/gallina-huevos-oro.webp",
-    "gallina huevos oro": "/games/gallina-huevos-oro.webp",
-    "go power": "/games/go-power.webp",
-    "kung fu frog": "/games/kung-fu-frog.webp",
-    "king fu frog": "/games/kung-fu-frog.webp",
-    "legendary sword": "/games/legendary-sword.webp",
-    "mighty hammer": "/games/mighty-hammer.webp",
-    "mighty hammer link up": "/games/mighty-hammer.webp",
-    "multi win 15": "/games/multi-win-15.webp",
-    "night link medieval": "/games/night-link-medieval.webp",
-    "san fa pandas": "/games/san-fa-pandas.webp",
-    "san fa tigers": "/games/san-fa-tigers.webp",
-    "spin bingo": "/games/spin-bingo.webp",
-    "taco mania": "/games/taco-mania.webp",
-    "tiger dragon": "/games/tiger-dragon.webp",
-    "tiger and dragon": "/games/tiger-dragon.webp",
-    "xtension link": "/games/xtension-link.webp",
-    // Fallbacks para nombres variantes
-    "link up": "/games/multi-win-15.webp",
-    "dragon legend": "/games/san-fa-pandas.webp",
-    "rising fortune": "/games/legendary-sword.webp",
-    "cash connection": "/games/gallina-huevos-oro.webp",
-    "mega fire blaze": "/games/taco-mania.webp",
-    "fortune link": "/games/xtension-link.webp",
-    "huff n puff money mansion": "/games/epic-empires.webp",
-    "majestic beast": "/games/san-fa-tigers.webp",
-    "mega king": "/games/bao-zhu-zao-fu.webp",
-};
-
-// Fallback default para juegos sin mapeo
-const DEFAULT_GAME_IMAGE = "/games/epic-empires.webp";
-
-// Función para obtener imagen local basada en nombre del juego
-function getLocalGameImage(name: string, originalImage?: string): string {
-    // Si ya es una ruta local válida, usarla
-    if (originalImage?.startsWith("/games/")) {
-        return originalImage;
-    }
-    
-    // Buscar en el mapeo por nombre (normalizado a minúsculas)
-    const normalizedName = name.toLowerCase().trim();
-    return GAME_IMAGE_MAP[normalizedName] || DEFAULT_GAME_IMAGE;
-}
-
-// Juegos por defecto si el tenant no tiene
-const DEFAULT_NEW_GAMES = [
-    { name: "Bao Zhu Zao Fu", image: "/games/bao-zhu-zao-fu.webp" },
-    { name: "Epic Empires", image: "/games/epic-empires.webp" },
-    { name: "San Fa Tigers", image: "/games/san-fa-tigers.webp" },
-    { name: "Taco Mania", image: "/games/taco-mania.webp" },
-    { name: "Multi Win 15", image: "/games/multi-win-15.webp" },
-];
-
-const DEFAULT_TOP_GAMES = [
-    { name: "Legendary Sword", image: "/games/legendary-sword.webp" },
-    { name: "Mighty Hammer", image: "/games/mighty-hammer.webp" },
-    { name: "Tiger Dragon", image: "/games/tiger-dragon.webp" },
-    { name: "Gallina Huevos de Oro", image: "/games/gallina-huevos-oro.webp" },
-    { name: "Night Link Medieval", image: "/games/night-link-medieval.webp" },
-];
 
 interface GameCardProps {
     name: string;
@@ -122,6 +55,8 @@ function GameCarousel({ title, icon, games }: GameCarouselProps) {
         if (emblaApi) emblaApi.scrollNext();
     }, [emblaApi]);
 
+    if (games.length === 0) return null;
+
     return (
         <div className="mb-12 last:mb-0">
             <motion.div
@@ -159,8 +94,8 @@ function GameCarousel({ title, icon, games }: GameCarouselProps) {
 
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex -mx-2">
-                    {games.map((game) => (
-                        <GameCard key={game.name} name={game.name} image={game.image} />
+                    {games.map((game, index) => (
+                        <GameCard key={`${game.name}-${index}`} name={game.name} image={game.image} />
                     ))}
                 </div>
             </div>
@@ -169,28 +104,37 @@ function GameCarousel({ title, icon, games }: GameCarouselProps) {
 }
 
 export function GamesSection() {
-    const { content } = useTenant();
-    const games = content?.games;
+    const { tenantId, content } = useTenant();
+    const { data: gamesFromDb, isLoading } = useTenantGames(tenantId);
+    const gamesContent = content?.games;
 
-    // Obtener juegos del tenant o usar defaults
-    const newGamesData = games?.newGames?.items || DEFAULT_NEW_GAMES;
-    const topGamesData = games?.topGames?.items || DEFAULT_TOP_GAMES;
+    // Filtrar juegos activos por categoría
+    const activeGames = gamesFromDb?.filter(g => g.is_active) || [];
+    const newGames = activeGames
+        .filter(g => g.category === 'new')
+        .sort((a, b) => a.display_order - b.display_order)
+        .map(g => ({ name: g.name, image: g.image_url }));
+    
+    const topGames = activeGames
+        .filter(g => g.category === 'top')
+        .sort((a, b) => a.display_order - b.display_order)
+        .map(g => ({ name: g.name, image: g.image_url }));
 
-    // Mapear a imágenes locales
-    const newGames = newGamesData.map((game: { name: string; image?: string }) => ({
-        name: game.name,
-        image: getLocalGameImage(game.name, game.image),
-    }));
+    // Títulos de las secciones (del mock-tenant o defaults)
+    const sectionTitle = gamesContent?.title || "NUESTROS JUEGOS";
+    const sectionSubtitle = gamesContent?.subtitle || "Descubre nuestra selección de juegos de casino";
+    const newGamesTitle = gamesContent?.newGames?.title || "Nuevos Juegos";
+    const topGamesTitle = gamesContent?.topGames?.title || "Los Más Jugados";
 
-    const topGames = topGamesData.map((game: { name: string; image?: string }) => ({
-        name: game.name,
-        image: getLocalGameImage(game.name, game.image),
-    }));
+    // No mostrar sección si no hay juegos y está cargando
+    if (isLoading) {
+        return null;
+    }
 
-    const sectionTitle = games?.title || "NUESTROS JUEGOS";
-    const sectionSubtitle = games?.subtitle || "Descubre nuestra selección de juegos de casino";
-    const newGamesTitle = games?.newGames?.title || "Nuevos Juegos";
-    const topGamesTitle = games?.topGames?.title || "Los Más Jugados";
+    // No mostrar si no hay juegos en ninguna categoría
+    if (newGames.length === 0 && topGames.length === 0) {
+        return null;
+    }
 
     return (
         <SectionWrapper id="juegos" background="secondary">
@@ -209,17 +153,21 @@ export function GamesSection() {
                     <Text size="lg" textColor="muted">{sectionSubtitle}</Text>
                 </motion.div>
 
-                <GameCarousel
-                    title={newGamesTitle}
-                    icon={<Sparkles className="w-5 h-5" />}
-                    games={newGames}
-                />
+                {newGames.length > 0 && (
+                    <GameCarousel
+                        title={newGamesTitle}
+                        icon={<Sparkles className="w-5 h-5" />}
+                        games={newGames}
+                    />
+                )}
 
-                <GameCarousel
-                    title={topGamesTitle}
-                    icon={<Star className="w-5 h-5" />}
-                    games={topGames}
-                />
+                {topGames.length > 0 && (
+                    <GameCarousel
+                        title={topGamesTitle}
+                        icon={<Star className="w-5 h-5" />}
+                        games={topGames}
+                    />
+                )}
             </Container>
         </SectionWrapper>
     );

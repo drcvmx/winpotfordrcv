@@ -8,6 +8,7 @@ import { useTenant } from "@/context/TenantContext";
 import ImageEditorSection from "./ImageEditorSection";
 import ContentEditorSection from "./ContentEditorSection";
 import EventsEditorSection from "./EventsEditorSection";
+import { GamesEditorSection } from "./GamesEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId } = useTenant();
@@ -60,6 +61,12 @@ export default function ContentEditorTab() {
                     >
                         🎉 Eventos
                     </TabsTrigger>
+                    <TabsTrigger 
+                        value="games" 
+                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
+                    >
+                        🎮 Juegos
+                    </TabsTrigger>
                 </TabsList>
 
                 {/* Content Tab */}
@@ -75,6 +82,11 @@ export default function ContentEditorTab() {
                 {/* Events Tab */}
                 <TabsContent value="events" className="mt-6">
                     <EventsEditorSection tenantId={tenantId} />
+                </TabsContent>
+
+                {/* Games Tab */}
+                <TabsContent value="games" className="mt-6">
+                    <GamesEditorSection tenantId={tenantId} />
                 </TabsContent>
             </Tabs>
         </div>
