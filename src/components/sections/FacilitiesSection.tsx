@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantFacilities } from "@/hooks/useTenantFacilities";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function FacilitiesSection() {
     const { tenantId, content } = useTenant();
@@ -11,9 +12,8 @@ export function FacilitiesSection() {
 
     // Use DB images if available, otherwise fall back to mock data
     const galleryImages = dbFacilities && dbFacilities.length > 0
-        ? dbFacilities.map(f => ({ src: f.image_url, alt: f.alt_text || "Instalación" }))
+        ? dbFacilities.map(f => ({ src: normalizeImageUrl(f.image_url), alt: f.alt_text || "Instalación" }))
         : content.facilities?.images || [];
-
     // Don't render if no images available
     if (!isLoading && galleryImages.length === 0) return null;
 
@@ -54,9 +54,14 @@ export function FacilitiesSection() {
                                 className="group relative overflow-hidden rounded-xl aspect-[4/3]"
                             >
                                 <img
-                                    src={image.src}
+                                    src={normalizeImageUrl(image.src)}
                                     alt={image.alt}
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    onError={(e) => {
+                                      e.currentTarget.src = "/placeholder.svg";
+                                    }}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             </motion.div>
