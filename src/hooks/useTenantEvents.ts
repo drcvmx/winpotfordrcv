@@ -143,6 +143,7 @@ export function useDeleteTenantEvent() {
       toast({
         title: "Evento eliminado",
         description: "El evento ha sido eliminado.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {

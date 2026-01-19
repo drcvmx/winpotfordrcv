@@ -138,6 +138,7 @@ export function useAddTenantGame() {
       toast({
         title: "Juego agregado",
         description: "El juego se ha agregado correctamente.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {
@@ -172,6 +173,7 @@ export function useUpdateTenantGame() {
       toast({
         title: "Juego actualizado",
         description: "El juego se ha actualizado correctamente.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {
@@ -203,6 +205,7 @@ export function useDeleteTenantGame() {
       toast({
         title: "Juego eliminado",
         description: "El juego se ha eliminado correctamente.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {
