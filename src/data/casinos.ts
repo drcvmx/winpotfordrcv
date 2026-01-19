@@ -2,7 +2,7 @@ import type { CasinoType, BrandFilter } from "@/types";
 
 export const brandFilters: BrandFilter[] = [
   { id: 'all', label: 'Todos', count: 18 },
-  { id: 'winpot', label: 'Winpot', count: 13, color: '#FF2B44' },
+  { id: 'winpot', label: 'Winpot', count: 15, color: '#FF2B44' },
   { id: 'capri', label: 'Capri', count: 2, color: '#FFC107' },
   { id: 'diamonds', label: 'Diamonds', count: 2, color: '#B0BEC5' },
   { id: 'veneto', label: 'Veneto', count: 1, color: '#FF2B44' },
@@ -246,15 +246,15 @@ export const casinos: CasinoType[] = [
 
 // Estadísticas de casinos
 export const casinoStats = {
-  totalLocations: 18,
-  totalCities: 16,
+  totalLocations: 20,
+  totalCities: 17,
   byBrand: {
-    winpot: 13,
+    winpot: 15,
     diamonds: 2,
     capri: 2,
     veneto: 1,
   },
-  open24h: 3,
+  open24h: 4,
 };
 
 // Colores de marca
