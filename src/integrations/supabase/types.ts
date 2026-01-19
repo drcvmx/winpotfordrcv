@@ -85,6 +85,7 @@ export type Database = {
           is_active: boolean | null
           is_recurring: boolean | null
           recurrence_day: number | null
+          recurrence_days: number[] | null
           recurrence_text: string | null
           recurrence_type: string | null
           tenant_id: string
@@ -101,6 +102,7 @@ export type Database = {
           is_active?: boolean | null
           is_recurring?: boolean | null
           recurrence_day?: number | null
+          recurrence_days?: number[] | null
           recurrence_text?: string | null
           recurrence_type?: string | null
           tenant_id: string
@@ -117,6 +119,7 @@ export type Database = {
           is_active?: boolean | null
           is_recurring?: boolean | null
           recurrence_day?: number | null
+          recurrence_days?: number[] | null
           recurrence_text?: string | null
           recurrence_type?: string | null
           tenant_id?: string
