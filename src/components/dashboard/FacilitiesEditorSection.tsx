@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Plus, Trash2, Save, GripVertical, Image as ImageIcon } from "lucide-react";
+import { normalizeImageUrl } from "@/lib/url-utils";
 import {
   useTenantFacilitiesAdmin,
   useAddTenantFacility,
@@ -135,7 +136,7 @@ export function FacilitiesEditorSection({ tenantId }: FacilitiesEditorSectionPro
           {newItem.imageUrl && (
             <div className="w-32 h-24 rounded-md overflow-hidden bg-muted">
               <img
-                src={newItem.imageUrl}
+                src={normalizeImageUrl(newItem.imageUrl)}
                 alt="Vista previa"
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -177,7 +178,7 @@ export function FacilitiesEditorSection({ tenantId }: FacilitiesEditorSectionPro
                 {/* Preview */}
                 <div className="w-32 h-24 rounded-md overflow-hidden bg-muted flex-shrink-0">
                   <img
-                    src={editingItems[facility.id]?.imageUrl || facility.image_url}
+                    src={normalizeImageUrl(editingItems[facility.id]?.imageUrl || facility.image_url)}
                     alt={facility.alt_text || "Instalación"}
                     className="w-full h-full object-cover"
                     onError={(e) => {

@@ -27,7 +27,10 @@ export function useTenantFacilities(tenantId: string) {
         .order('display_order', { ascending: true });
       
       if (error) throw error;
-      return data as TenantFacility[];
+      return (data as TenantFacility[]).map((f) => ({
+        ...f,
+        image_url: normalizeImageUrl(f.image_url),
+      }));
     },
     enabled: !!tenantId,
   });
@@ -45,7 +48,10 @@ export function useTenantFacilitiesAdmin(tenantId: string) {
         .order('display_order', { ascending: true });
       
       if (error) throw error;
-      return data as TenantFacility[];
+      return (data as TenantFacility[]).map((f) => ({
+        ...f,
+        image_url: normalizeImageUrl(f.image_url),
+      }));
     },
     enabled: !!tenantId,
   });
