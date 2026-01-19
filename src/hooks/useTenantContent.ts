@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { TENANTS } from "@/data/mock-tenant";
 
 export interface TenantContent {
   id: string;
@@ -43,6 +44,46 @@ export interface TenantContentInput {
   meta_description?: string;
 }
 
+// Get default content from mock-tenant for a specific tenant
+function getDefaultContent(tenantId: string): Partial<TenantContent> | null {
+  const tenant = TENANTS[tenantId];
+  if (!tenant) return null;
+
+  const content = tenant.content;
+  const hero = content.hero;
+  const contact = content.contact;
+  const metadata = content.metadata;
+
+  // Build schedule string from hero.schedule object
+  let scheduleStr = '';
+  if (hero?.schedule) {
+    const parts: string[] = [];
+    if (hero.schedule.weekdays) parts.push(hero.schedule.weekdays);
+    if (hero.schedule.weekend) parts.push(hero.schedule.weekend);
+    scheduleStr = parts.join(' | ');
+  }
+
+  // Get CTA buttons
+  const ctaPrimary = hero?.ctaButtons?.find(b => b.variant === 'primary');
+  const ctaSecondary = hero?.ctaButtons?.find(b => b.variant === 'secondary');
+
+  return {
+    hero_title: hero?.title || null,
+    hero_subtitle: hero?.subtitle || null,
+    hero_schedule: scheduleStr || null,
+    hero_address: typeof hero?.address === 'object' ? hero.address.full : (hero?.address || null),
+    hero_cta_primary_text: ctaPrimary?.text || null,
+    hero_cta_primary_link: ctaPrimary?.href || null,
+    hero_cta_secondary_text: ctaSecondary?.text || null,
+    hero_cta_secondary_link: ctaSecondary?.href || null,
+    contact_phone: (contact as any)?.phone || null,
+    contact_email: (contact as any)?.email || null,
+    contact_hours: scheduleStr || null,
+    meta_title: metadata?.title || null,
+    meta_description: hero?.description || null,
+  };
+}
+
 // Fetch content for a specific tenant
 export function useTenantContent(tenantId: string) {
   return useQuery({
@@ -55,6 +96,21 @@ export function useTenantContent(tenantId: string) {
         .maybeSingle();
       
       if (error) throw error;
+      
+      // If no DB data exists, return defaults from mock-tenant
+      if (!data) {
+        const defaults = getDefaultContent(tenantId);
+        if (defaults) {
+          return {
+            id: '',
+            tenant_id: tenantId,
+            created_at: '',
+            updated_at: '',
+            ...defaults,
+          } as TenantContent;
+        }
+      }
+      
       return data as TenantContent | null;
     },
     enabled: !!tenantId,
