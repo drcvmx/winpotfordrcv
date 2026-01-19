@@ -80,6 +80,7 @@ export type Database = {
           description: string | null
           display_order: number | null
           event_date: string | null
+          event_dates: string[] | null
           id: string
           image_url: string | null
           is_active: boolean | null
@@ -97,6 +98,7 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           event_date?: string | null
+          event_dates?: string[] | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -114,6 +116,7 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           event_date?: string | null
+          event_dates?: string[] | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null

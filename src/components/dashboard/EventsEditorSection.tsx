@@ -25,7 +25,8 @@ import {
   TenantEvent,
   DAYS_OF_WEEK,
   RECURRENCE_TYPES,
-  generateRecurrenceText
+  generateRecurrenceText,
+  formatMultipleDates
 } from "@/hooks/useTenantEvents";
 
 interface EventsEditorSectionProps {
@@ -38,12 +39,14 @@ interface EventFormData {
   description: string;
   image_url: string;
   event_date: string;
+  event_dates: string[]; // Multiple specific dates
   is_active: boolean;
   is_recurring: boolean;
   recurrence_type: string;
   recurrence_day: number;
   recurrence_days: number[];
   recurrence_text: string;
+  date_mode: 'single' | 'multiple'; // UI helper for date selection
 }
 
 const emptyEvent: EventFormData = {
@@ -51,12 +54,14 @@ const emptyEvent: EventFormData = {
   description: '',
   image_url: '',
   event_date: '',
+  event_dates: [],
   is_active: true,
   is_recurring: false,
   recurrence_type: 'weekly',
   recurrence_day: 1,
   recurrence_days: [],
   recurrence_text: '',
+  date_mode: 'single',
 };
 
 export default function EventsEditorSection({ tenantId }: EventsEditorSectionProps) {
@@ -70,18 +75,23 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
   const [eventToDelete, setEventToDelete] = useState<string | null>(null);
 
   const handleEdit = (event: TenantEvent) => {
+    // Determine date_mode based on existing data
+    const hasMultipleDates = event.event_dates && event.event_dates.length > 0;
+    
     setEditingEvent({
       id: event.id,
       title: event.title,
       description: event.description || '',
       image_url: event.image_url || '',
       event_date: event.event_date || '',
+      event_dates: event.event_dates || [],
       is_active: event.is_active,
       is_recurring: event.is_recurring ?? false,
       recurrence_type: event.recurrence_type || 'weekly',
       recurrence_day: event.recurrence_day ?? 1,
       recurrence_days: event.recurrence_days || [],
       recurrence_text: event.recurrence_text || '',
+      date_mode: hasMultipleDates ? 'multiple' : 'single',
     });
     setIsCreating(false);
   };
@@ -100,6 +110,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
     if (!editingEvent) return;
 
     const isMultiDay = editingEvent.recurrence_type === 'weekly-multi';
+    const isMultipleDates = !editingEvent.is_recurring && editingEvent.date_mode === 'multiple';
     
     upsertEvent.mutate({
       id: editingEvent.id,
@@ -107,7 +118,10 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
       title: editingEvent.title,
       description: editingEvent.description || undefined,
       image_url: editingEvent.image_url || undefined,
-      event_date: editingEvent.is_recurring ? undefined : editingEvent.event_date || undefined,
+      event_date: editingEvent.is_recurring ? undefined : 
+        (isMultipleDates ? undefined : editingEvent.event_date || undefined),
+      event_dates: editingEvent.is_recurring ? undefined :
+        (isMultipleDates ? editingEvent.event_dates : undefined),
       is_active: editingEvent.is_active,
       is_recurring: editingEvent.is_recurring,
       recurrence_type: editingEvent.is_recurring ? editingEvent.recurrence_type : undefined,
@@ -135,9 +149,25 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
     setEventToDelete(null);
   };
 
-  const handleChange = (field: keyof EventFormData, value: string | boolean | number | number[]) => {
+  const handleChange = (field: keyof EventFormData, value: string | boolean | number | number[] | string[]) => {
     if (!editingEvent) return;
     setEditingEvent(prev => prev ? { ...prev, [field]: value } : null);
+  };
+
+  // Add a date to the multiple dates array
+  const handleAddDate = (date: string) => {
+    if (!editingEvent || !date) return;
+    if (editingEvent.event_dates.includes(date)) return; // Already exists
+    
+    const newDates = [...editingEvent.event_dates, date].sort();
+    handleChange('event_dates', newDates);
+  };
+
+  // Remove a date from the multiple dates array
+  const handleRemoveDate = (dateToRemove: string) => {
+    if (!editingEvent) return;
+    const newDates = editingEvent.event_dates.filter(d => d !== dateToRemove);
+    handleChange('event_dates', newDates);
   };
 
   // Auto-generate recurrence text when single day changes
@@ -243,18 +273,124 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
               </div>
             </div>
 
-            {/* Conditional: Specific Date OR Recurrence Options */}
+            {/* Conditional: Specific Date(s) OR Recurrence Options */}
             {!editingEvent.is_recurring ? (
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Fecha del Evento
-                </Label>
-                <Input
-                  type="date"
-                  value={editingEvent.event_date}
-                  onChange={(e) => handleChange('event_date', e.target.value)}
-                />
+              <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border">
+                {/* Single vs Multiple Date Toggle */}
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('date_mode', 'single')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      editingEvent.date_mode === 'single' 
+                        ? 'bg-casino-gold text-black' 
+                        : 'bg-background text-foreground border border-border hover:border-casino-gold/50'
+                    }`}
+                  >
+                    📅 Una Fecha
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('date_mode', 'multiple')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      editingEvent.date_mode === 'multiple' 
+                        ? 'bg-casino-gold text-black' 
+                        : 'bg-background text-foreground border border-border hover:border-casino-gold/50'
+                    }`}
+                  >
+                    📆 Múltiples Fechas
+                  </button>
+                </div>
+
+                {/* Single Date Mode */}
+                {editingEvent.date_mode === 'single' && (
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Fecha del Evento
+                    </Label>
+                    <Input
+                      type="date"
+                      value={editingEvent.event_date}
+                      onChange={(e) => handleChange('event_date', e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {/* Multiple Dates Mode */}
+                {editingEvent.date_mode === 'multiple' && (
+                  <div className="space-y-3">
+                    <Label className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Agregar Fechas (ej: 8 de julio y 20 de julio)
+                    </Label>
+                    
+                    {/* Date input to add new dates */}
+                    <div className="flex gap-2">
+                      <Input
+                        type="date"
+                        id="new-date-input"
+                        className="max-w-xs"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddDate((e.target as HTMLInputElement).value);
+                            (e.target as HTMLInputElement).value = '';
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          const input = document.getElementById('new-date-input') as HTMLInputElement;
+                          if (input?.value) {
+                            handleAddDate(input.value);
+                            input.value = '';
+                          }
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Agregar
+                      </Button>
+                    </div>
+
+                    {/* Display selected dates */}
+                    {editingEvent.event_dates.length > 0 ? (
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">
+                          Fechas seleccionadas: <span className="font-medium text-foreground">{formatMultipleDates(editingEvent.event_dates)}</span>
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {editingEvent.event_dates.map((date) => {
+                            const formatted = new Date(date + 'T00:00:00').toLocaleDateString('es-MX', { 
+                              day: 'numeric', 
+                              month: 'short', 
+                              year: 'numeric' 
+                            });
+                            return (
+                              <span
+                                key={date}
+                                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-casino-gold/20 text-casino-gold text-sm border border-casino-gold/30"
+                              >
+                                {formatted}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveDate(date)}
+                                  className="ml-1 hover:text-destructive transition-colors"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-amber-500">Agrega al menos una fecha</p>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border">
@@ -402,7 +538,8 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                 disabled={
                   !editingEvent.title || 
                   upsertEvent.isPending ||
-                  (editingEvent.is_recurring && editingEvent.recurrence_type === 'weekly-multi' && (!editingEvent.recurrence_days || editingEvent.recurrence_days.length === 0))
+                  (editingEvent.is_recurring && editingEvent.recurrence_type === 'weekly-multi' && (!editingEvent.recurrence_days || editingEvent.recurrence_days.length === 0)) ||
+                  (!editingEvent.is_recurring && editingEvent.date_mode === 'multiple' && editingEvent.event_dates.length === 0)
                 }
                 className="bg-casino-gold hover:bg-casino-dark-gold text-black"
               >
@@ -452,6 +589,12 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                     {event.recurrence_type === 'weekly-multi' ? 'Multi-día' : 'Recurrente'}
                   </span>
                 )}
+                {!event.is_recurring && event.event_dates && event.event_dates.length > 0 && (
+                  <span className="bg-casino-gold text-black text-xs px-2 py-1 rounded flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {event.event_dates.length} fechas
+                  </span>
+                )}
               </div>
               {!event.is_active && (
                 <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
@@ -470,9 +613,13 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                 <p className="text-xs text-blue-400 mt-2">
                   🔄 {event.recurrence_text}
                 </p>
+              ) : event.event_dates && event.event_dates.length > 0 ? (
+                <p className="text-xs text-casino-gold mt-2">
+                  📆 {formatMultipleDates(event.event_dates)}
+                </p>
               ) : event.event_date ? (
                 <p className="text-xs text-casino-gold mt-2">
-                  📅 {new Date(event.event_date).toLocaleDateString('es-MX')}
+                  📅 {new Date(event.event_date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               ) : null}
               <div className="flex justify-end mt-3">
