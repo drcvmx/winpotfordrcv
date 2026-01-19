@@ -13,7 +13,8 @@ export interface TenantEvent {
   display_order: number;
   is_recurring: boolean;
   recurrence_type: string | null; // 'weekly', 'daily', 'monthly'
-  recurrence_day: number | null; // 0=Sunday, 1=Monday... 6=Saturday
+  recurrence_day: number | null; // 0=Sunday, 1=Monday... 6=Saturday (legacy, single day)
+  recurrence_days: number[] | null; // Array of days for multi-day events
   recurrence_text: string | null; // "Todos los martes a las 8pm"
   created_at: string;
   updated_at: string;
@@ -31,6 +32,7 @@ export interface TenantEventInput {
   is_recurring?: boolean;
   recurrence_type?: string;
   recurrence_day?: number;
+  recurrence_days?: number[];
   recurrence_text?: string;
 }
 
@@ -73,6 +75,7 @@ export function useUpsertTenantEvent() {
             is_recurring: input.is_recurring ?? false,
             recurrence_type: input.recurrence_type || null,
             recurrence_day: input.recurrence_day ?? null,
+            recurrence_days: input.recurrence_days || null,
             recurrence_text: input.recurrence_text || null,
           })
           .eq('id', input.id)
@@ -96,6 +99,7 @@ export function useUpsertTenantEvent() {
             is_recurring: input.is_recurring ?? false,
             recurrence_type: input.recurrence_type || null,
             recurrence_day: input.recurrence_day ?? null,
+            recurrence_days: input.recurrence_days || null,
             recurrence_text: input.recurrence_text || null,
           })
           .select()
@@ -158,17 +162,44 @@ export function useDeleteTenantEvent() {
 
 // Helper to get day name in Spanish
 export const DAYS_OF_WEEK = [
-  { value: 0, label: 'Domingo' },
-  { value: 1, label: 'Lunes' },
-  { value: 2, label: 'Martes' },
-  { value: 3, label: 'Miércoles' },
-  { value: 4, label: 'Jueves' },
-  { value: 5, label: 'Viernes' },
-  { value: 6, label: 'Sábado' },
+  { value: 0, label: 'Domingo', short: 'Dom' },
+  { value: 1, label: 'Lunes', short: 'Lun' },
+  { value: 2, label: 'Martes', short: 'Mar' },
+  { value: 3, label: 'Miércoles', short: 'Mié' },
+  { value: 4, label: 'Jueves', short: 'Jue' },
+  { value: 5, label: 'Viernes', short: 'Vie' },
+  { value: 6, label: 'Sábado', short: 'Sáb' },
 ];
 
 export const RECURRENCE_TYPES = [
-  { value: 'weekly', label: 'Semanal' },
+  { value: 'weekly', label: 'Semanal (un día)' },
+  { value: 'weekly-multi', label: 'Semanal (múltiples días)' },
   { value: 'daily', label: 'Diario' },
   { value: 'monthly', label: 'Mensual' },
 ];
+
+// Helper to generate recurrence text from selected days
+export function generateRecurrenceText(days: number[]): string {
+  if (!days || days.length === 0) return '';
+  
+  const sortedDays = [...days].sort((a, b) => a - b);
+  
+  // Check if it's a consecutive range
+  const isConsecutive = sortedDays.every((day, i) => 
+    i === 0 || day === sortedDays[i - 1] + 1
+  );
+  
+  if (isConsecutive && sortedDays.length > 1) {
+    const firstDay = DAYS_OF_WEEK.find(d => d.value === sortedDays[0])?.label.toLowerCase();
+    const lastDay = DAYS_OF_WEEK.find(d => d.value === sortedDays[sortedDays.length - 1])?.label.toLowerCase();
+    return `De ${firstDay} a ${lastDay}`;
+  }
+  
+  // Non-consecutive: list all days
+  const dayNames = sortedDays.map(d => DAYS_OF_WEEK.find(day => day.value === d)?.label.toLowerCase());
+  if (dayNames.length === 1) {
+    return `Todos los ${dayNames[0]}`;
+  }
+  const lastDay = dayNames.pop();
+  return `${dayNames.join(', ')} y ${lastDay}`;
+}

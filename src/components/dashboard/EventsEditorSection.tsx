@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Plus, Trash2, Save, Calendar, Image, Repeat } from "lucide-react";
 import { 
   useTenantEvents, 
@@ -13,7 +14,8 @@ import {
   useDeleteTenantEvent, 
   TenantEvent,
   DAYS_OF_WEEK,
-  RECURRENCE_TYPES 
+  RECURRENCE_TYPES,
+  generateRecurrenceText
 } from "@/hooks/useTenantEvents";
 
 interface EventsEditorSectionProps {
@@ -30,6 +32,7 @@ interface EventFormData {
   is_recurring: boolean;
   recurrence_type: string;
   recurrence_day: number;
+  recurrence_days: number[];
   recurrence_text: string;
 }
 
@@ -42,6 +45,7 @@ const emptyEvent: EventFormData = {
   is_recurring: false,
   recurrence_type: 'weekly',
   recurrence_day: 1,
+  recurrence_days: [],
   recurrence_text: '',
 };
 
@@ -64,6 +68,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
       is_recurring: event.is_recurring ?? false,
       recurrence_type: event.recurrence_type || 'weekly',
       recurrence_day: event.recurrence_day ?? 1,
+      recurrence_days: event.recurrence_days || [],
       recurrence_text: event.recurrence_text || '',
     });
     setIsCreating(false);
@@ -82,6 +87,8 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
   const handleSave = () => {
     if (!editingEvent) return;
 
+    const isMultiDay = editingEvent.recurrence_type === 'weekly-multi';
+    
     upsertEvent.mutate({
       id: editingEvent.id,
       tenant_id: tenantId,
@@ -92,7 +99,8 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
       is_active: editingEvent.is_active,
       is_recurring: editingEvent.is_recurring,
       recurrence_type: editingEvent.is_recurring ? editingEvent.recurrence_type : undefined,
-      recurrence_day: editingEvent.is_recurring ? editingEvent.recurrence_day : undefined,
+      recurrence_day: editingEvent.is_recurring && !isMultiDay ? editingEvent.recurrence_day : undefined,
+      recurrence_days: editingEvent.is_recurring && isMultiDay ? editingEvent.recurrence_days : undefined,
       recurrence_text: editingEvent.is_recurring ? editingEvent.recurrence_text : undefined,
     }, {
       onSuccess: () => {
@@ -108,18 +116,34 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
     }
   };
 
-  const handleChange = (field: keyof EventFormData, value: string | boolean | number) => {
+  const handleChange = (field: keyof EventFormData, value: string | boolean | number | number[]) => {
     if (!editingEvent) return;
     setEditingEvent(prev => prev ? { ...prev, [field]: value } : null);
   };
 
-  // Auto-generate recurrence text when day changes
+  // Auto-generate recurrence text when single day changes
   const handleRecurrenceDayChange = (day: number) => {
     const dayName = DAYS_OF_WEEK.find(d => d.value === day)?.label || '';
     handleChange('recurrence_day', day);
-    if (!editingEvent?.recurrence_text) {
-      handleChange('recurrence_text', `Todos los ${dayName.toLowerCase()}`);
+    handleChange('recurrence_text', `Todos los ${dayName.toLowerCase()}`);
+  };
+
+  // Toggle a day in the multi-day selection
+  const handleToggleDay = (day: number) => {
+    if (!editingEvent) return;
+    
+    const currentDays = editingEvent.recurrence_days || [];
+    let newDays: number[];
+    
+    if (currentDays.includes(day)) {
+      newDays = currentDays.filter(d => d !== day);
+    } else {
+      newDays = [...currentDays, day].sort((a, b) => a - b);
     }
+    
+    handleChange('recurrence_days', newDays);
+    // Auto-generate text
+    handleChange('recurrence_text', generateRecurrenceText(newDays));
   };
 
   if (isLoading) {
@@ -214,14 +238,25 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                 />
               </div>
             ) : (
-              <div className="grid gap-4 md:grid-cols-3 p-4 bg-muted/30 rounded-lg border border-border">
+              <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border">
                 <div className="space-y-2">
                   <Label>Frecuencia</Label>
                   <Select 
                     value={editingEvent.recurrence_type} 
-                    onValueChange={(val) => handleChange('recurrence_type', val)}
+                    onValueChange={(val) => {
+                      handleChange('recurrence_type', val);
+                      // Reset text when changing type
+                      if (val === 'weekly-multi') {
+                        handleChange('recurrence_text', generateRecurrenceText(editingEvent.recurrence_days));
+                      } else if (val === 'weekly') {
+                        const dayName = DAYS_OF_WEEK.find(d => d.value === editingEvent.recurrence_day)?.label || '';
+                        handleChange('recurrence_text', `Todos los ${dayName.toLowerCase()}`);
+                      } else if (val === 'daily') {
+                        handleChange('recurrence_text', 'Todos los días');
+                      }
+                    }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="max-w-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -234,6 +269,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   </Select>
                 </div>
 
+                {/* Single day selection */}
                 {editingEvent.recurrence_type === 'weekly' && (
                   <div className="space-y-2">
                     <Label>Día de la Semana</Label>
@@ -241,7 +277,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                       value={String(editingEvent.recurrence_day)} 
                       onValueChange={(val) => handleRecurrenceDayChange(Number(val))}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="max-w-xs">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -255,15 +291,44 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   </div>
                 )}
 
-                <div className="space-y-2 md:col-span-full">
+                {/* Multi-day selection */}
+                {editingEvent.recurrence_type === 'weekly-multi' && (
+                  <div className="space-y-3">
+                    <Label>Selecciona los días</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {DAYS_OF_WEEK.map((day) => {
+                        const isSelected = editingEvent.recurrence_days?.includes(day.value);
+                        return (
+                          <button
+                            key={day.value}
+                            type="button"
+                            onClick={() => handleToggleDay(day.value)}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${
+                              isSelected
+                                ? 'bg-casino-gold text-black border-casino-gold'
+                                : 'bg-background text-foreground border-border hover:border-casino-gold/50'
+                            }`}
+                          >
+                            {day.short}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {editingEvent.recurrence_days?.length === 0 && (
+                      <p className="text-xs text-amber-500">Selecciona al menos un día</p>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-2">
                   <Label>Texto a Mostrar</Label>
                   <Input
                     value={editingEvent.recurrence_text}
                     onChange={(e) => handleChange('recurrence_text', e.target.value)}
-                    placeholder="Ej: Todos los martes a las 8pm"
+                    placeholder="Ej: De lunes a jueves"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Este texto se mostrará en el sitio web
+                    Este texto se mostrará en el sitio web (se genera automáticamente, pero puedes editarlo)
                   </p>
                 </div>
               </div>
@@ -315,7 +380,11 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
               </Button>
               <Button
                 onClick={handleSave}
-                disabled={!editingEvent.title || upsertEvent.isPending}
+                disabled={
+                  !editingEvent.title || 
+                  upsertEvent.isPending ||
+                  (editingEvent.is_recurring && editingEvent.recurrence_type === 'weekly-multi' && (!editingEvent.recurrence_days || editingEvent.recurrence_days.length === 0))
+                }
                 className="bg-casino-gold hover:bg-casino-dark-gold text-black"
               >
                 {upsertEvent.isPending ? (
@@ -361,7 +430,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                 {event.is_recurring && (
                   <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
                     <Repeat className="h-3 w-3" />
-                    Recurrente
+                    {event.recurrence_type === 'weekly-multi' ? 'Multi-día' : 'Recurrente'}
                   </span>
                 )}
               </div>
