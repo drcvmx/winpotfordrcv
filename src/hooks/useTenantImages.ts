@@ -132,6 +132,7 @@ export function useDeleteTenantImage() {
       toast({
         title: "Imagen eliminada",
         description: "Se usará la imagen por defecto.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {

@@ -193,6 +193,7 @@ export function useDeleteTenantFacility() {
       toast({
         title: "Imagen eliminada",
         description: "La imagen ha sido eliminada de la galería.",
+        className: "bg-green-600 text-white border-none",
       });
     },
     onError: (error) => {
