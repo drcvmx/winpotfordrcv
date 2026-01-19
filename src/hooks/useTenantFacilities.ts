@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export interface TenantFacility {
   id: string;
@@ -67,11 +68,14 @@ export function useAddTenantFacility() {
       altText?: string;
       displayOrder?: number;
     }) => {
+      // Normalize URL (converts Google Drive URLs to embed format)
+      const normalizedUrl = normalizeImageUrl(imageUrl);
+      
       const { data, error } = await supabase
         .from('tenant_facilities')
         .insert({
           tenant_id: tenantId,
-          image_url: imageUrl,
+          image_url: normalizedUrl,
           alt_text: altText || null,
           display_order: displayOrder || 0,
         })
@@ -122,7 +126,8 @@ export function useUpdateTenantFacility() {
       isActive?: boolean;
     }) => {
       const updateData: Record<string, unknown> = {};
-      if (imageUrl !== undefined) updateData.image_url = imageUrl;
+      // Normalize URL if provided (converts Google Drive URLs to embed format)
+      if (imageUrl !== undefined) updateData.image_url = normalizeImageUrl(imageUrl);
       if (altText !== undefined) updateData.alt_text = altText;
       if (displayOrder !== undefined) updateData.display_order = displayOrder;
       if (isActive !== undefined) updateData.is_active = isActive;
