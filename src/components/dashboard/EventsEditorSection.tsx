@@ -8,6 +8,16 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Plus, Trash2, Save, Calendar, Image, Repeat } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { 
   useTenantEvents, 
   useUpsertTenantEvent, 
@@ -56,6 +66,8 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
 
   const [editingEvent, setEditingEvent] = useState<EventFormData | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<string | null>(null);
 
   const handleEdit = (event: TenantEvent) => {
     setEditingEvent({
@@ -110,10 +122,17 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('¿Estás seguro de eliminar este evento?')) {
-      deleteEvent.mutate({ id, tenantId });
+  const handleDeleteClick = (id: string) => {
+    setEventToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (eventToDelete) {
+      deleteEvent.mutate({ id: eventToDelete, tenantId });
     }
+    setDeleteDialogOpen(false);
+    setEventToDelete(null);
   };
 
   const handleChange = (field: keyof EventFormData, value: string | boolean | number | number[]) => {
@@ -463,7 +482,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(event.id);
+                    handleDeleteClick(event.id);
                   }}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -479,6 +498,31 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">
+              ¿Eliminar evento?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Esta acción no se puede deshacer. El evento será eliminado permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-border hover:bg-muted">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
