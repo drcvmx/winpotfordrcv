@@ -3,13 +3,19 @@ import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
+import { useTenantFacilities } from "@/hooks/useTenantFacilities";
 
 export function FacilitiesSection() {
-    const { content } = useTenant();
-    if (!content.facilities) return null;
+    const { tenantId, content } = useTenant();
+    const { data: dbFacilities, isLoading } = useTenantFacilities(tenantId);
 
-    // Fallback images if not provided? Or assume they are provided in context
-    const galleryImages = content.facilities.images;
+    // Use DB images if available, otherwise fall back to mock data
+    const galleryImages = dbFacilities && dbFacilities.length > 0
+        ? dbFacilities.map(f => ({ src: f.image_url, alt: f.alt_text || "Instalación" }))
+        : content.facilities?.images || [];
+
+    // Don't render if no images available
+    if (!isLoading && galleryImages.length === 0) return null;
 
     return (
         <SectionWrapper id="instalaciones" background="secondary">
@@ -30,25 +36,33 @@ export function FacilitiesSection() {
                     </Text>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {galleryImages.map((image: any, index: number) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.15 }}
-                            className="group relative overflow-hidden rounded-xl aspect-[4/3]"
-                        >
-                            <img
-                                src={image.src}
-                                alt={image.alt}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </motion.div>
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="aspect-[4/3] rounded-xl bg-muted animate-pulse" />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {galleryImages.map((image: { src: string; alt: string }, index: number) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.15 }}
+                                className="group relative overflow-hidden rounded-xl aspect-[4/3]"
+                            >
+                                <img
+                                    src={image.src}
+                                    alt={image.alt}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </Container>
         </SectionWrapper>
     );
