@@ -11,7 +11,7 @@ export const brandFilters: BrandFilter[] = [
 export const casinos: CasinoType[] = [
   // WINPOT BRAND (13 locaciones)
   {
-    id: 'tuxtla-winpot',
+    id: 'tuxtla',
     city: 'Tuxtla',
     brand: 'winpot',
     schedule: {
@@ -24,7 +24,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Ámbar+Fashion+Mall+Tuxtla+Gutiérrez',
   },
   {
-    id: 'boca-del-rio-winpot',
+    id: 'boca',
     city: 'Boca del Río',
     brand: 'winpot',
     schedule: {
@@ -37,7 +37,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Sol+Boca+del+Río+Veracruz',
   },
   {
-    id: 'punto-sur-winpot',
+    id: 'puntosur',
     city: 'Punto Sur',
     brand: 'winpot',
     schedule: {
@@ -50,7 +50,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Av+Punto+Sur+235+Tlajomulco+Jalisco',
   },
   {
-    id: 'tonala-winpot',
+    id: 'tonala',
     city: 'Tonalá',
     brand: 'winpot',
     schedule: {
@@ -62,7 +62,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Viva+Tonalá+Jalisco',
   },
   {
-    id: 'playa-del-carmen-winpot',
+    id: 'playa',
     city: 'Playa del Carmen',
     brand: 'winpot',
     schedule: {
@@ -74,7 +74,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Supermanzana+52+Playa+del+Carmen+Quintana+Roo',
   },
   {
-    id: 'puebla-winpot',
+    id: 'puebla',
     city: 'Puebla',
     brand: 'winpot',
     schedule: {
@@ -86,7 +86,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Pabellón+Puebla',
   },
   {
-    id: 'pachuca-winpot',
+    id: 'pachuca',
     city: 'Pachuca',
     brand: 'winpot',
     schedule: {
@@ -98,7 +98,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Camino+Real+de+La+Plata+Pachuca+Hidalgo',
   },
   {
-    id: 'mexicali-mandarin-winpot',
+    id: 'mandarin',
     city: 'Mexicali Mandarín',
     brand: 'winpot',
     schedule: {
@@ -111,7 +111,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Mandarín+Mexicali+Baja+California',
   },
   {
-    id: 'mexicali-carranza-winpot',
+    id: 'carranza',
     city: 'Mexicali Carranza',
     brand: 'winpot',
     schedule: {
@@ -124,7 +124,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Lázaro+Cárdenas+2000+Mexicali+Baja+California',
   },
   {
-    id: 'merida-winpot',
+    id: 'merida',
     city: 'Mérida',
     brand: 'winpot',
     schedule: {
@@ -137,7 +137,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Las+Américas+Mérida+Yucatán',
   },
   {
-    id: 'guaymas-winpot',
+    id: 'guaymas',
     city: 'Guaymas',
     brand: 'winpot',
     schedule: {
@@ -149,7 +149,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Benito+Juárez+900+Guaymas+Sonora',
   },
   {
-    id: 'metrocentro-winpot',
+    id: 'metrocentro',
     city: 'Metrocentro',
     brand: 'winpot',
     schedule: {
@@ -162,7 +162,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=López+Mateos+Sur+3333+Zapopan+Jalisco',
   },
   {
-    id: 'metepec-winpot',
+    id: 'metepec',
     city: 'Metepec',
     brand: 'winpot',
     schedule: {
@@ -176,7 +176,7 @@ export const casinos: CasinoType[] = [
 
   // DIAMONDS BRAND (2 locaciones)
   {
-    id: 'poza-rica-diamonds',
+    id: 'pozarica',
     city: 'Poza Rica',
     brand: 'diamonds',
     schedule: {
@@ -188,7 +188,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+Gran+Patio+Poza+Rica+Veracruz',
   },
   {
-    id: 'cordilleras-diamonds',
+    id: 'cordilleras',
     city: 'Cordilleras',
     brand: 'diamonds',
     schedule: {
@@ -203,7 +203,7 @@ export const casinos: CasinoType[] = [
 
   // CAPRI BRAND (2 locaciones)
   {
-    id: 'guadalajara-capri',
+    id: 'guadalajara',
     city: 'Guadalajara',
     brand: 'capri',
     schedule: {
@@ -216,7 +216,7 @@ export const casinos: CasinoType[] = [
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Circunvalación+1846+Guadalajara+Jalisco',
   },
   {
-    id: 'satelite-capri',
+    id: 'satelite',
     city: 'Satélite',
     brand: 'capri',
     schedule: {
@@ -231,7 +231,7 @@ export const casinos: CasinoType[] = [
 
   // VENETO BRAND (1 locación)
   {
-    id: 'interlomas-veneto',
+    id: 'interlomas',
     city: 'Interlomas',
     brand: 'veneto',
     schedule: {
