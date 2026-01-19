@@ -2,12 +2,34 @@ import { motion } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
-import { useTenant } from "@/context/TenantContext";
 import { Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
+
+// Juegos hardcodeados - mismos para todos los casinos (corporativo)
+const NEW_GAMES = [
+    { name: "Bao Zhu Zao Fu", image: "/games/bao-zhu-zao-fu.webp" },
+    { name: "Epic Empires", image: "/games/epic-empires.webp" },
+    { name: "San Fa Tigers", image: "/games/san-fa-tigers.webp" },
+    { name: "Taco Mania", image: "/games/taco-mania.webp" },
+    { name: "Multi Win 15", image: "/games/multi-win-15.webp" },
+    { name: "Go Power", image: "/games/go-power.webp" },
+    { name: "Kung Fu Frog", image: "/games/kung-fu-frog.webp" },
+    { name: "Spin Bingo", image: "/games/spin-bingo.webp" },
+];
+
+const TOP_GAMES = [
+    { name: "Legendary Sword", image: "/games/legendary-sword.webp" },
+    { name: "Mighty Hammer", image: "/games/mighty-hammer.webp" },
+    { name: "Tiger Dragon", image: "/games/tiger-dragon.webp" },
+    { name: "Gallina Huevos de Oro", image: "/games/gallina-huevos-oro.webp" },
+    { name: "Night Link Medieval", image: "/games/night-link-medieval.webp" },
+    { name: "Xtension Link", image: "/games/xtension-link.webp" },
+    { name: "San Fa Pandas", image: "/games/san-fa-pandas.webp" },
+    { name: "Bao Zhu Zhao", image: "/games/bao-zhu-zhao.webp" },
+];
 
 interface GameCardProps {
     name: string;
@@ -101,11 +123,6 @@ function GameCarousel({ title, icon, games }: GameCarouselProps) {
 }
 
 export function GamesSection() {
-    const { content } = useTenant();
-    const { games } = content;
-
-    if (!games) return null;
-
     return (
         <SectionWrapper id="juegos" background="secondary">
             <Container>
@@ -117,22 +134,22 @@ export function GamesSection() {
                     className="text-center mb-12"
                 >
                     <Heading className="mb-4">
-                        <span className="text-foreground font-bold">{games.title.split(" ")[0]}</span>{" "}
-                        <span className="text-primary font-bold">{games.title.split(" ").slice(1).join(" ")}</span>
+                        <span className="text-foreground font-bold">NUESTROS</span>{" "}
+                        <span className="text-primary font-bold">JUEGOS</span>
                     </Heading>
-                    <Text size="lg" textColor="muted">{games.subtitle}</Text>
+                    <Text size="lg" textColor="muted">Descubre nuestra selección de juegos de casino</Text>
                 </motion.div>
 
                 <GameCarousel
-                    title={games.newGames.title}
+                    title="Nuevos Juegos"
                     icon={<Sparkles className="w-5 h-5" />}
-                    games={games.newGames.items}
+                    games={NEW_GAMES}
                 />
 
                 <GameCarousel
-                    title={games.topGames.title}
+                    title="Los Más Jugados"
                     icon={<Star className="w-5 h-5" />}
-                    games={games.topGames.items}
+                    games={TOP_GAMES}
                 />
             </Container>
         </SectionWrapper>
