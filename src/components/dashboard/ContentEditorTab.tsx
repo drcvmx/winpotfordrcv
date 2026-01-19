@@ -9,6 +9,7 @@ import ImageEditorSection from "./ImageEditorSection";
 import ContentEditorSection from "./ContentEditorSection";
 import EventsEditorSection from "./EventsEditorSection";
 import { GamesEditorSection } from "./GamesEditorSection";
+import { FacilitiesEditorSection } from "./FacilitiesEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId } = useTenant();
@@ -56,6 +57,12 @@ export default function ContentEditorTab() {
                         📷 Imágenes
                     </TabsTrigger>
                     <TabsTrigger 
+                        value="facilities" 
+                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
+                    >
+                        🏢 Instalaciones
+                    </TabsTrigger>
+                    <TabsTrigger 
                         value="events" 
                         className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
                     >
@@ -77,6 +84,11 @@ export default function ContentEditorTab() {
                 {/* Images Tab */}
                 <TabsContent value="images" className="mt-6">
                     <ImageEditorSection tenantId={tenantId} />
+                </TabsContent>
+
+                {/* Facilities Tab */}
+                <TabsContent value="facilities" className="mt-6">
+                    <FacilitiesEditorSection tenantId={tenantId} />
                 </TabsContent>
 
                 {/* Events Tab */}
