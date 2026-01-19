@@ -5,9 +5,8 @@ import { Container } from "@/components/ui/container";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Heading } from "@/components/ui/typography";
 
-import { useTenant } from "@/context/TenantContext";
-
-const defaultProviders = [
+// Proveedores hardcodeados - mismos para todos los casinos (corporativo)
+const PROVIDERS = [
     { name: "Aurify", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/Aurify.webp" },
     { name: "AGS", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/ags-1.webp" },
     { name: "Dreidel", logo: "https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/08/dreidel-1.webp" },
@@ -19,8 +18,6 @@ const defaultProviders = [
 ];
 
 export function ProvidersSection() {
-    const { content } = useTenant();
-    const providersList = content?.games?.providers?.list || defaultProviders;
 
     const [emblaRef] = useEmblaCarousel(
         { loop: true, align: "start", dragFree: true },
@@ -54,7 +51,7 @@ export function ProvidersSection() {
                     ref={emblaRef}
                 >
                     <div className="flex gap-4">
-                        {providersList.map((provider: any, index: number) => (
+                        {PROVIDERS.map((provider, index) => (
                             <div
                                 key={index}
                                 className="flex-shrink-0 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
