@@ -1311,10 +1311,9 @@ export const TENANTS: Record<string, TenantConfig> = {
                     full: "Plaza Gran Patio, Carr. Poza Rica - Cazones Km. 50, La Rueda, 93306 Poza Rica de Hidalgo, Ver.",
                     landmark: "Gran Patio Poza Rica"
                 },
-                floatingImages: [ // Restoring floating images from definition
-                    { url: "https://pozarica.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-1.webp", alt: "Ruleta" },
-                    { url: "https://pozarica.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-2.webp", alt: "Cartas" },
-                    { url: "https://pozarica.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-5.webp", alt: "Fichas" }
+                floatingImages: [
+                    { url: "/decorations/diamonds-flotante-1.webp", alt: "Ruleta" },
+                    { url: "/decorations/diamonds-flotante-2.webp", alt: "Cartas" }
                 ],
                 ctaButtons: [
                     { text: "¿Cómo Llegar?", href: "#ubicacion", variant: "secondary" }
@@ -1397,11 +1396,8 @@ export const TENANTS: Record<string, TenantConfig> = {
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "primary" }
                 ],
                 floatingImages: [
-                    { url: "https://cordilleras.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-1.webp", alt: "Ruleta" },
-                    { url: "https://cordilleras.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-2.webp", alt: "Cartas" },
-                    { url: "https://cordilleras.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-5.webp", alt: "Fichas" },
-                    { url: "https://cordilleras.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-3.webp", alt: "Dados" },
-                    { url: "https://cordilleras.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-cordillera-flotante-6.webp", alt: "Ficha dorada" }
+                    { url: "/decorations/diamonds-flotante-1.webp", alt: "Ruleta" },
+                    { url: "/decorations/diamonds-flotante-2.webp", alt: "Cartas" }
                 ]
             },
             contact: {
@@ -1521,11 +1517,9 @@ export const TENANTS: Record<string, TenantConfig> = {
                     full: "Av. Circunvalación Jorge Álvarez del Castillo 1846, Lomas del Country, Guadalajara.",
                     landmark: "Lomas del Country"
                 },
-                // New floating elements requested for Capri
                 floatingImages: [
-                    { url: "/winpot-capri-flotante-6.webp", alt: "Capri 1" },
-                    { url: "/winpot-capri-flotante-1.webp", alt: "Capri 2" },
-                    { url: "/winpot-capri-flotante-3.webp", alt: "Capri 3" }
+                    { url: "/decorations/capri-flotante-1.webp", alt: "Fichas" },
+                    { url: "/decorations/capri-flotante-2.webp", alt: "Ruleta" }
                 ],
                 ctaButtons: [
                     { text: "¿CÓMO LLEGAR?", href: "#ubicacion" }
@@ -1610,9 +1604,8 @@ export const TENANTS: Record<string, TenantConfig> = {
                     { text: "Jugar Online", href: "https://winpot.mx/", variant: "secondary" }
                 ],
                 floatingImages: [
-                    { url: "/tenants/capri-satelite/decoration/fichas.webp", alt: "Fichas casino doradas" },
-                    { url: "/tenants/capri-satelite/decoration/cartas.webp", alt: "Cartas poker - 4 Ases" },
-                    { url: "/tenants/capri-satelite/decoration/ruleta.webp", alt: "Ruleta" }
+                    { url: "/decorations/capri-flotante-1.webp", alt: "Fichas" },
+                    { url: "/decorations/capri-flotante-2.webp", alt: "Ruleta" }
                 ]
             },
             contact: {
