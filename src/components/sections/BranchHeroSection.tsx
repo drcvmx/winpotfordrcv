@@ -30,7 +30,7 @@ export function BranchHeroSection() {
     const secondaryCtaLink = dbContent?.hero_cta_secondary_link || '#contacto';
 
     return (
-        <SectionWrapper id="inicio" background="gradient" padding="none" className="min-h-[600px] lg:min-h-[800px] pt-32 pb-20 hero-gradient overflow-hidden relative flex items-center">
+        <SectionWrapper id="inicio" background="gradient" padding="none" className="min-h-[600px] lg:min-h-[800px] pt-20 md:pt-32 pb-20 hero-gradient overflow-hidden relative flex items-center">
             <Container>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center relative">
                     {/* Dynamic Floating Images (Diamonds / Generic) */}
