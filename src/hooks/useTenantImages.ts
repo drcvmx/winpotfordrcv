@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export type ImageSection = 'hero' | 'about' | 'contact';
 
@@ -25,7 +26,12 @@ export function useTenantImages(tenantId: string) {
         .eq('tenant_id', tenantId);
       
       if (error) throw error;
-      return data as TenantImage[];
+      
+      // Normalize Google Drive URLs
+      return (data as TenantImage[]).map(img => ({
+        ...img,
+        image_url: normalizeImageUrl(img.image_url),
+      }));
     },
     enabled: !!tenantId,
   });
@@ -44,7 +50,15 @@ export function useTenantImage(tenantId: string, section: ImageSection) {
         .maybeSingle();
       
       if (error) throw error;
-      return data as TenantImage | null;
+      
+      // Normalize Google Drive URL
+      if (data) {
+        return {
+          ...data,
+          image_url: normalizeImageUrl(data.image_url),
+        } as TenantImage;
+      }
+      return null;
     },
     enabled: !!tenantId && !!section,
   });
@@ -67,13 +81,16 @@ export function useUpsertTenantImage() {
       imageUrl: string;
       altText?: string;
     }) => {
+      // Normalize URL before saving
+      const normalizedUrl = normalizeImageUrl(imageUrl);
+      
       const { data, error } = await supabase
         .from('tenant_images')
         .upsert(
           {
             tenant_id: tenantId,
             section: section,
-            image_url: imageUrl,
+            image_url: normalizedUrl,
             alt_text: altText || null,
           },
           {
