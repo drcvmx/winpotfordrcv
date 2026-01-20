@@ -84,23 +84,23 @@ const Dashboard = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="casino-card p-8 md:p-10 relative overflow-hidden">
+            <div className="casino-card p-6 sm:p-8 md:p-10 relative overflow-hidden">
               {/* Decorative gradient accent */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-casino-gold via-casino-dark-gold to-casino-gold" />
 
-              <div className="flex items-start justify-between">
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    Hola <span className="casino-text-gradient">{user.email}</span>,
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-2 sm:mb-4">
+                    Hola <span className="casino-text-gradient break-all">{user.email}</span>,
                   </h1>
-                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-                    Bienvenido al panel de control. Desde aquí puedes gestionar el contenido de todas las sucursales de manera centralizada.
+                  <p className="text-muted-foreground text-sm sm:text-base md:text-lg leading-relaxed">
+                    Bienvenido al panel de control. Desde aquí puedes gestionar el contenido de todas las sucursales.
                   </p>
                 </div>
                 <Button
                   onClick={handleSignOut}
                   variant="outline"
-                  className="shrink-0 border-red-500/50 text-red-400 hover:bg-red-500/10"
+                  className="shrink-0 w-full sm:w-auto border-red-500/50 text-red-400 hover:bg-red-500/10"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Salir
