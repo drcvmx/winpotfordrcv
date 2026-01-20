@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Home, Gamepad2, CalendarDays, Building2 } from "lucide-react";
+import { Home, Gamepad2, CalendarDays, Building2, Users, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/domain/Logo";
 import { NavLinkAtom } from "@/components/ui/nav-link-atom";
 import { Container } from "@/components/ui/container";
@@ -14,8 +14,9 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "Eventos": CalendarDays,
   "Instalaciones": Building2,
   "Casinos": Building2,
-  "Nosotros": Home,
-  "Contacto": Home,
+  "Nosotros": Users,
+  "Ubicación": MapPin,
+  "Contacto": Phone,
 };
 
 export function Navbar() {
@@ -65,8 +66,8 @@ export function Navbar() {
             : 'bg-background/80 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-around py-2 px-2">
-          {navigationItems.slice(0, 4).map((link: any) => {
+        <div className="flex items-center justify-around py-2 px-1">
+          {navigationItems.map((link: any) => {
             const IconComponent = ICON_MAP[link.name] || Home;
             return (
               <a
