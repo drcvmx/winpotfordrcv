@@ -206,7 +206,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold text-foreground">🎉 Eventos del Casino</h3>
           <p className="text-sm text-muted-foreground">Gestiona eventos únicos o recurrentes</p>
@@ -214,7 +214,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
         <Button
           onClick={handleCreate}
           disabled={!!editingEvent}
-          className="bg-casino-gold hover:bg-casino-dark-gold text-black"
+          className="bg-casino-gold hover:bg-casino-dark-gold text-black w-full sm:w-auto"
         >
           <Plus className="mr-2 h-4 w-4" />
           Nuevo Evento
@@ -246,11 +246,11 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   <Repeat className="h-4 w-4" />
                   Tipo de Evento
                 </Label>
-                <div className="flex items-center gap-4 pt-2">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap pt-2">
                   <button
                     type="button"
                     onClick={() => handleChange('is_recurring', false)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       !editingEvent.is_recurring 
                         ? 'bg-casino-gold text-black' 
                         : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -261,7 +261,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   <button
                     type="button"
                     onClick={() => handleChange('is_recurring', true)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       editingEvent.is_recurring 
                         ? 'bg-casino-gold text-black' 
                         : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -277,11 +277,11 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
             {!editingEvent.is_recurring ? (
               <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border">
                 {/* Single vs Multiple Date Toggle */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                   <button
                     type="button"
                     onClick={() => handleChange('date_mode', 'single')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       editingEvent.date_mode === 'single' 
                         ? 'bg-casino-gold text-black' 
                         : 'bg-background text-foreground border border-border hover:border-casino-gold/50'
@@ -292,7 +292,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
                   <button
                     type="button"
                     onClick={() => handleChange('date_mode', 'multiple')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       editingEvent.date_mode === 'multiple' 
                         ? 'bg-casino-gold text-black' 
                         : 'bg-background text-foreground border border-border hover:border-casino-gold/50'

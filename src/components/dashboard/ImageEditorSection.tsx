@@ -143,14 +143,14 @@ export default function ImageEditorSection({ tenantId }: ImageEditorSectionProps
           const displayUrl = data.url || fallback;
 
           return (
-            <div key={section} className="space-y-4 p-4 border border-border rounded-lg bg-card/50">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-foreground">{info.label}</h3>
+            <div key={section} className="space-y-4 p-3 sm:p-4 border border-border rounded-lg bg-card/50">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-foreground text-sm sm:text-base">{info.label}</h3>
                   <p className="text-xs text-muted-foreground">{info.description}</p>
                 </div>
                 {hasCustomImage && (
-                  <span className="bg-green-500/20 text-green-500 text-xs px-2 py-1 rounded flex items-center gap-1">
+                  <span className="bg-green-500/20 text-green-500 text-xs px-2 py-1 rounded flex items-center gap-1 w-fit shrink-0">
                     <Check className="w-3 h-3" /> Personalizada
                   </span>
                 )}
