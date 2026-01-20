@@ -43,38 +43,40 @@ export default function ContentEditorTab() {
 
             {/* Main Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full justify-start bg-card border border-border">
-                    <TabsTrigger 
-                        value="content" 
-                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
-                    >
-                        📝 Contenido
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="images" 
-                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
-                    >
-                        📷 Imágenes
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="facilities" 
-                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
-                    >
-                        🏢 Instalaciones
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="events" 
-                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
-                    >
-                        🎉 Eventos
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="games" 
-                        className="data-[state=active]:bg-casino-gold data-[state=active]:text-black"
-                    >
-                        🎮 Juegos
-                    </TabsTrigger>
-                </TabsList>
+                <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+                    <TabsList className="w-max sm:w-full justify-start bg-card border border-border flex-nowrap">
+                        <TabsTrigger 
+                            value="content" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            📝 <span className="hidden xs:inline">Contenido</span><span className="xs:hidden">Cont.</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="images" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            📷 <span className="hidden xs:inline">Imágenes</span><span className="xs:hidden">Img.</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="facilities" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            🏢 <span className="hidden xs:inline">Instalaciones</span><span className="xs:hidden">Inst.</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="events" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            🎉 <span className="hidden xs:inline">Eventos</span><span className="xs:hidden">Evnt.</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="games" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            🎮 <span className="hidden xs:inline">Juegos</span><span className="xs:hidden">Jueg.</span>
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
 
                 {/* Content Tab */}
                 <TabsContent value="content" className="mt-6">
