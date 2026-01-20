@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export interface TenantEvent {
   id: string;
@@ -50,7 +51,12 @@ export function useTenantEvents(tenantId: string) {
         .order('display_order', { ascending: true });
       
       if (error) throw error;
-      return data as TenantEvent[];
+      
+      // Normalize Google Drive URLs for images
+      return (data as TenantEvent[]).map(event => ({
+        ...event,
+        image_url: event.image_url ? normalizeImageUrl(event.image_url) : null,
+      }));
     },
     enabled: !!tenantId,
   });
@@ -63,6 +69,9 @@ export function useUpsertTenantEvent() {
 
   return useMutation({
     mutationFn: async (input: TenantEventInput) => {
+      // Normalize image URL if provided
+      const normalizedImageUrl = input.image_url ? normalizeImageUrl(input.image_url) : undefined;
+      
       if (input.id) {
         // Update existing
         const { data, error } = await supabase
@@ -70,7 +79,7 @@ export function useUpsertTenantEvent() {
           .update({
             title: input.title,
             description: input.description,
-            image_url: input.image_url,
+            image_url: normalizedImageUrl,
             event_date: input.event_date || null,
             event_dates: input.event_dates || null,
             is_active: input.is_active,
@@ -95,7 +104,7 @@ export function useUpsertTenantEvent() {
             tenant_id: input.tenant_id,
             title: input.title,
             description: input.description,
-            image_url: input.image_url,
+            image_url: normalizedImageUrl,
             event_date: input.event_date || null,
             event_dates: input.event_dates || null,
             is_active: input.is_active ?? true,
