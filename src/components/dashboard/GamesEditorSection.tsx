@@ -81,17 +81,17 @@ export function GamesEditorSection({ tenantId }: GamesEditorSectionProps) {
       {gamesList.map((game) => (
         <div 
           key={game.id} 
-          className={`flex items-center gap-4 p-3 rounded-lg border ${
+          className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 rounded-lg border ${
             game.id.startsWith('default-') ? 'border-dashed border-muted-foreground/30 bg-muted/30' : 'border-border bg-card'
           }`}
         >
           <img 
             src={game.image_url} 
             alt={game.name} 
-            className="w-16 h-16 object-contain rounded"
+            className="w-16 h-16 object-contain rounded mx-auto sm:mx-0 shrink-0"
           />
           
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-2 min-w-0">
             <Input
               value={game.name}
               onChange={(e) => handleUpdateGame(game, { name: e.target.value })}
@@ -116,29 +116,34 @@ export function GamesEditorSection({ tenantId }: GamesEditorSectionProps) {
             </Select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={game.is_active}
-              onCheckedChange={(checked) => handleUpdateGame(game, { is_active: checked })}
-            />
+          <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/50">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground sm:hidden">Activo</span>
+              <Switch
+                checked={game.is_active}
+                onCheckedChange={(checked) => handleUpdateGame(game, { is_active: checked })}
+              />
+            </div>
             
-            {!game.id.startsWith('default-') && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleDeleteGame(game)}
-                className="text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {!game.id.startsWith('default-') && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDeleteGame(game)}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+              
+              {game.id.startsWith('default-') && (
+                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                  Sin guardar
+                </span>
+              )}
+            </div>
           </div>
-          
-          {game.id.startsWith('default-') && (
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-              Sin guardar
-            </span>
-          )}
         </div>
       ))}
       

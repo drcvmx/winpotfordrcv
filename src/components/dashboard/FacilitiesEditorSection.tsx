@@ -168,27 +168,29 @@ export function FacilitiesEditorSection({ tenantId }: FacilitiesEditorSectionPro
             {facilities.map((facility, index) => (
               <div
                 key={facility.id}
-                className="flex items-start gap-4 p-4 border rounded-lg bg-card"
+                className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 p-4 border rounded-lg bg-card"
               >
-                <div className="flex items-center text-muted-foreground">
-                  <GripVertical className="h-5 w-5" />
-                  <span className="text-sm ml-1">{index + 1}</span>
-                </div>
+                <div className="flex items-center gap-3 sm:gap-0">
+                  <div className="flex items-center text-muted-foreground sm:mr-2">
+                    <GripVertical className="h-5 w-5" />
+                    <span className="text-sm ml-1">{index + 1}</span>
+                  </div>
 
-                {/* Preview */}
-                <div className="w-32 h-24 rounded-md overflow-hidden bg-muted flex-shrink-0">
-                  <img
-                    src={normalizeImageUrl(editingItems[facility.id]?.imageUrl || facility.image_url)}
-                    alt={facility.alt_text || "Instalación"}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/placeholder.svg";
-                    }}
-                  />
+                  {/* Preview */}
+                  <div className="w-24 sm:w-32 h-16 sm:h-24 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                    <img
+                      src={normalizeImageUrl(editingItems[facility.id]?.imageUrl || facility.image_url)}
+                      alt={facility.alt_text || "Instalación"}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/placeholder.svg";
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Form fields */}
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex-1 grid grid-cols-1 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs">URL de la imagen</Label>
                     <Input
@@ -210,17 +212,21 @@ export function FacilitiesEditorSection({ tenantId }: FacilitiesEditorSectionPro
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-2">
+                <div className="flex sm:flex-col gap-2 justify-end">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleUpdate(facility.id)}
                     disabled={updateFacility.isPending}
+                    className="flex-1 sm:flex-initial"
                   >
                     {updateFacility.isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Save className="h-4 w-4" />
+                      <>
+                        <Save className="h-4 w-4 sm:mr-0 mr-2" />
+                        <span className="sm:hidden">Guardar</span>
+                      </>
                     )}
                   </Button>
                   <Button
@@ -228,11 +234,15 @@ export function FacilitiesEditorSection({ tenantId }: FacilitiesEditorSectionPro
                     variant="destructive"
                     onClick={() => handleDelete(facility.id)}
                     disabled={deleteFacility.isPending}
+                    className="flex-1 sm:flex-initial"
                   >
                     {deleteFacility.isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Trash2 className="h-4 w-4" />
+                      <>
+                        <Trash2 className="h-4 w-4 sm:mr-0 mr-2" />
+                        <span className="sm:hidden">Eliminar</span>
+                      </>
                     )}
                   </Button>
                 </div>
