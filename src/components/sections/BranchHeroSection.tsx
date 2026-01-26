@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
 import { useTenantContent } from "@/hooks/useTenantContent";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function BranchHeroSection() {
     const { content, tenantId, theme } = useTenant();
@@ -52,7 +53,7 @@ export function BranchHeroSection() {
                                 return (
                                     <motion.img
                                         key={i}
-                                        src={src}
+                                        src={normalizeImageUrl(src)}
                                         alt={alt}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -163,7 +164,7 @@ export function BranchHeroSection() {
                         <div className="relative">
                             {isVeneto && <div className="absolute inset-0 bg-primary opacity-40 blur-3xl scale-110" />}
                             <img
-                                src={heroImage}
+                                src={normalizeImageUrl(heroImage)}
                                 alt={heroImageData?.alt_text || `${heroTitle} ${heroSubtitle} - Casino`}
                                 className="w-full max-w-2xl drop-shadow-2xl relative z-10"
                             />

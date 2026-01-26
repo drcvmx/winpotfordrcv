@@ -3,6 +3,7 @@ import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function AwardsSection() {
     const { content } = useTenant();
@@ -33,10 +34,10 @@ export function AwardsSection() {
                     className="relative w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl border border-accent/20"
                 >
                     <video
-                        src={awards.video}
+                        src={normalizeImageUrl(awards.video)}
                         controls
                         className="w-full h-auto aspect-video object-cover"
-                        poster={awards.poster} // Optional poster if provided
+                        poster={awards.poster ? normalizeImageUrl(awards.poster) : undefined}
                     >
                         Your browser does not support the video tag.
                     </video>

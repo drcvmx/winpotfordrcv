@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/domain/ContactForm";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
 import rouletteImageFallback from "@/assets/roulette-contact.png";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function ContactSection() {
   const { tenantId } = useTenant();
@@ -28,7 +29,7 @@ export function ContactSection() {
             className="relative rounded-lg overflow-hidden"
           >
             <img
-              src={contactImage}
+              src={normalizeImageUrl(contactImage)}
               alt={contactAlt}
               className="w-full h-auto object-cover"
             />

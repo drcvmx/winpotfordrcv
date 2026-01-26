@@ -4,6 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Container } from "@/components/ui/container";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Heading } from "@/components/ui/typography";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 // Proveedores hardcodeados - mismos para todos los casinos (corporativo)
 const PROVIDERS = [
@@ -58,7 +59,7 @@ export function ProvidersSection() {
                             >
                                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 flex items-center justify-center h-32 hover:bg-white/20 transition-colors">
                                     <img
-                                        src={provider.logo}
+                                        src={normalizeImageUrl(provider.logo)}
                                         alt={provider.name}
                                         className="max-h-20 max-w-full object-contain opacity-90 hover:opacity-100 transition-opacity"
                                     />

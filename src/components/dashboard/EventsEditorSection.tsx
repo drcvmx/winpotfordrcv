@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Plus, Trash2, Save, Calendar, Image, Repeat } from "lucide-react";
+import { normalizeImageUrl } from "@/lib/url-utils";
 import {
   AlertDialog,
   AlertDialogAction,

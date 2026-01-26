@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Image as ImageIcon, Trash2, ExternalLink, Check } from "lucide-react";
 import { useTenantImages, useUpsertTenantImage, useDeleteTenantImage, ImageSection } from "@/hooks/useTenantImages";
 import { TENANTS } from "@/data/mock-tenant";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 interface ImageEditorSectionProps {
   tenantId: string;
@@ -160,7 +161,7 @@ export default function ImageEditorSection({ tenantId }: ImageEditorSectionProps
               {displayUrl && (
                 <div className="relative w-full h-40 bg-muted rounded-lg overflow-hidden">
                   <img
-                    src={displayUrl}
+                    src={normalizeImageUrl(displayUrl)}
                     alt={data.alt || `${section} preview`}
                     className="w-full h-full object-cover"
                     onError={(e) => {

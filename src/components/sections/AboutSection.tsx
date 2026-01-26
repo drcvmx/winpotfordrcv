@@ -5,6 +5,7 @@ import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
 import aboutBannerFallback from "@/assets/about-banner.webp";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function AboutSection() {
   const { tenantId, content } = useTenant();
@@ -56,7 +57,7 @@ export function AboutSection() {
             className="relative flex justify-end"
           >
             <img
-              src={aboutImage}
+              src={normalizeImageUrl(aboutImage)}
               alt={aboutAlt}
               className="w-full max-w-lg rounded-lg"
             />
