@@ -14,6 +14,7 @@ import {
   AVAILABLE_GAME_IMAGES,
   TenantGame 
 } from "@/hooks/useTenantGames";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 interface GamesEditorSectionProps {
   tenantId: string;
@@ -86,7 +87,7 @@ export function GamesEditorSection({ tenantId }: GamesEditorSectionProps) {
           }`}
         >
           <img 
-            src={game.image_url} 
+            src={normalizeImageUrl(game.image_url)} 
             alt={game.name} 
             className="w-16 h-16 object-contain rounded mx-auto sm:mx-0 shrink-0"
           />

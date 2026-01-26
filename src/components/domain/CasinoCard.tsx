@@ -5,6 +5,7 @@ import type { CasinoType } from "@/types";
 import { ContentCard } from "@/components/ui/content-card";
 import { Heading, Text } from "@/components/ui/typography";
 import { brandColors } from "@/data/casinos";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 interface CasinoCardProps {
   casino: CasinoType;
@@ -27,7 +28,7 @@ export function CasinoCard({ casino }: CasinoCardProps) {
       >
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
-            src={casino.imageUrl}
+            src={normalizeImageUrl(casino.imageUrl)}
             alt={`Casino ${casino.city}`}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"

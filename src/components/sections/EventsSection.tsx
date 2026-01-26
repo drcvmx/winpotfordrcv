@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantEvents } from "@/hooks/useTenantEvents";
-
+import { normalizeImageUrl } from "@/lib/url-utils";
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     "party-popper": PartyPopper,
     "clock": Clock,
@@ -114,7 +114,7 @@ export function EventsSection() {
                                 {/* Event Image */}
                                 <div className="h-64 lg:h-auto">
                                     <img
-                                        src={event.image}
+                                        src={normalizeImageUrl(event.image)}
                                         alt={event.title}
                                         className="w-full h-full object-cover"
                                     />

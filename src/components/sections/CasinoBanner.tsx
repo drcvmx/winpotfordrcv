@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 export function CasinoBanner() {
     return (
@@ -23,7 +24,7 @@ export function CasinoBanner() {
                         className="lg:absolute lg:-left-8 xl:left-0 flex-shrink-0"
                     >
                         <img
-                            src="https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-deco-img-2-1.webp"
+                            src={normalizeImageUrl("https://boca.winpotcasinos.com.mx/wp-content/uploads/2025/06/winpot-deco-img-2-1.webp")}
                             alt="Herradura de la suerte"
                             className="w-32 h-32 lg:w-40 lg:h-40 object-contain"
                         />

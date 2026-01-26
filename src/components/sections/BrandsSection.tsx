@@ -8,6 +8,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { normalizeImageUrl } from "@/lib/url-utils";
 
 import winpotLogo from "@/assets/winpot-logo.svg";
 import capriLogo from "@/assets/capri-logo.svg";
@@ -53,7 +54,7 @@ export function BrandsSection() {
               className="flex items-center justify-center p-6 cursor-pointer transition-all"
             >
               <img
-                src={brand.logo}
+                src={normalizeImageUrl(brand.logo)}
                 alt={`${brand.name} Casino Logo`}
                 className="h-20 w-auto object-contain"
               />
@@ -92,7 +93,7 @@ export function BrandsSection() {
                     className="flex items-center justify-center p-6"
                   >
                     <img
-                      src={brand.logo}
+                      src={normalizeImageUrl(brand.logo)}
                       alt={`${brand.name} Casino Logo`}
                       className="h-16 md:h-20 w-auto object-contain"
                     />
