@@ -10,6 +10,7 @@ import ContentEditorSection from "./ContentEditorSection";
 import EventsEditorSection from "./EventsEditorSection";
 import { GamesEditorSection } from "./GamesEditorSection";
 import { FacilitiesEditorSection } from "./FacilitiesEditorSection";
+import LegalEditorSection from "./LegalEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId } = useTenant();
@@ -75,6 +76,12 @@ export default function ContentEditorTab() {
                         >
                             🎮 <span className="hidden xs:inline">Juegos</span><span className="xs:hidden">Jueg.</span>
                         </TabsTrigger>
+                        <TabsTrigger 
+                            value="legal" 
+                            className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                            ⚖️ <span className="hidden xs:inline">Legal</span><span className="xs:hidden">Legal</span>
+                        </TabsTrigger>
                     </TabsList>
                 </div>
 
@@ -101,6 +108,11 @@ export default function ContentEditorTab() {
                 {/* Games Tab */}
                 <TabsContent value="games" className="mt-6">
                     <GamesEditorSection tenantId={tenantId} />
+                </TabsContent>
+
+                {/* Legal Tab */}
+                <TabsContent value="legal" className="mt-6">
+                    <LegalEditorSection tenantId={tenantId} />
                 </TabsContent>
             </Tabs>
         </div>

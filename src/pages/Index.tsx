@@ -5,6 +5,7 @@ import { CasinosSection } from "@/components/sections/CasinosSection";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { BrandsSection } from "@/components/sections/BrandsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { LegalSection } from "@/components/sections/LegalSection";
 import { Footer } from "@/components/sections/Footer";
 import DevSwitcher from "@/components/DevSwitcher";
 
@@ -19,6 +20,7 @@ const Index = () => {
       <AboutSection />
       <BrandsSection />
       <ContactSection />
+      <LegalSection />
       <Footer />
     </div>
   );
