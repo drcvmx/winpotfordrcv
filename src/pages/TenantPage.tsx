@@ -11,6 +11,7 @@ import { CasinosSection } from "@/components/sections/CasinosSection";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { BrandsSection } from "@/components/sections/BrandsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { LegalSection } from "@/components/sections/LegalSection";
 import { Footer } from "@/components/sections/Footer";
 import { GamesSection } from "@/components/sections/GamesSection";
 import { CasinoBanner } from "@/components/sections/CasinoBanner";
@@ -53,6 +54,7 @@ const TenantPage = () => {
         <ProvidersSection />
         <LocationSection />
         <ContactSection />
+        <LegalSection />
         <Footer />
       </div>
     );
@@ -69,6 +71,7 @@ const TenantPage = () => {
       <AboutSection />
       <BrandsSection />
       <ContactSection />
+      <LegalSection />
       <Footer />
     </div>
   );

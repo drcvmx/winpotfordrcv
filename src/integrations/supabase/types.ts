@@ -230,6 +230,30 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_legal: {
+        Row: {
+          created_at: string
+          id: string
+          legal_text: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          legal_text?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          legal_text?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
