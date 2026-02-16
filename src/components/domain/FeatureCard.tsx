@@ -30,7 +30,7 @@ export function FeatureCard({ feature }: FeatureCardProps) {
         <img 
           src={imageSrc} 
           alt={feature.title} 
-          className="w-16 h-16 object-contain mix-blend-screen"
+          className="w-20 h-20 object-contain"
         />
       </div>
       <Text size="sm" weight="medium" className="text-foreground max-w-[180px]">
