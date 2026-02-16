@@ -25,6 +25,8 @@ export interface TenantContent {
   // Footer
   footer_description: string | null;
   footer_address: string | null;
+  // Legal / Privacy
+  privacy_policy_url: string | null;
   // Timestamps
   created_at: string;
   updated_at: string;
@@ -47,6 +49,7 @@ export interface TenantContentInput {
   meta_description?: string;
   footer_description?: string;
   footer_address?: string;
+  privacy_policy_url?: string;
 }
 
 // Get default content from mock-tenant for a specific tenant
