@@ -15,7 +15,11 @@ const contactSchema = z.object({
   acceptPrivacy: z.literal(true, { errorMap: () => ({ message: "Debes aceptar el aviso de privacidad" }) }),
 });
 
-export function ContactForm() {
+interface ContactFormProps {
+  privacyUrl?: string | null;
+}
+
+export function ContactForm({ privacyUrl }: ContactFormProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -110,7 +114,14 @@ export function ContactForm() {
           className="mt-1"
         />
         <label htmlFor="privacy" className="text-sm text-muted-foreground cursor-pointer">
-          Al enviar aceptas nuestro <span className="underline">Aviso de Privacidad</span>
+          Al enviar aceptas nuestro{' '}
+          {privacyUrl ? (
+            <a href={privacyUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">
+              Aviso de Privacidad
+            </a>
+          ) : (
+            <span className="underline">Aviso de Privacidad</span>
+          )}
         </label>
       </div>
       {errors.acceptPrivacy && <Text size="xs" className="text-destructive">{errors.acceptPrivacy}</Text>}

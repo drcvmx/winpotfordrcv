@@ -1,0 +1,1 @@
+ALTER TABLE public.tenant_content ADD COLUMN IF NOT EXISTS privacy_policy_url_2 text;
