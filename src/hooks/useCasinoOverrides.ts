@@ -73,3 +73,33 @@ export function useUpsertCasinoOverride() {
     },
   });
 }
+
+export function useDeleteCasinoOverride() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (casinoId: string) => {
+      const { error } = await supabase
+        .from("casino_overrides")
+        .delete()
+        .eq("casino_id", casinoId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["casino-overrides"] });
+      toast({
+        title: "Casino eliminado",
+        description: "El casino se ha eliminado correctamente.",
+        className: "bg-green-600 text-white border-none",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error al eliminar",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+}
