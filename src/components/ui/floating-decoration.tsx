@@ -17,9 +17,11 @@ export function FloatingDecoration({
   top = "50%",
   delay = 0,
 }: FloatingDecorationProps) {
+  // On mobile: tuck partially off-screen so they don't overlap content
+  // On tablet+: extend further out
   const positionClass = side === "left"
-    ? "left-0 sm:left-0 md:-left-4 lg:-left-8 xl:-left-12"
-    : "right-0 sm:right-0 md:-right-4 lg:-right-8 xl:-right-12";
+    ? "-left-6 sm:-left-6 md:-left-10 lg:-left-14 xl:-left-16"
+    : "-right-6 sm:-right-6 md:-right-10 lg:-right-14 xl:-right-16";
 
   return (
     <motion.img
@@ -27,10 +29,10 @@ export function FloatingDecoration({
       alt=""
       aria-hidden="true"
       initial={{ opacity: 0, x: side === "left" ? -30 : 30 }}
-      whileInView={{ opacity: 0.85, x: 0 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay }}
-      className={`absolute ${positionClass} w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 object-contain pointer-events-none select-none z-10 ${className}`}
+      className={`absolute ${positionClass} w-14 h-14 sm:w-18 sm:h-18 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-36 xl:h-36 object-contain pointer-events-none select-none z-0 opacity-70 md:opacity-80 lg:opacity-100 ${className}`}
       style={{ top }}
     />
   );
