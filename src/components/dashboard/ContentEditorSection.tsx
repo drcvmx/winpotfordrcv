@@ -29,6 +29,8 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
     contact_hours: '',
     meta_title: '',
     meta_description: '',
+    footer_description: '',
+    footer_address: '',
   });
 
   useEffect(() => {
@@ -47,6 +49,8 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
         contact_hours: content.contact_hours || '',
         meta_title: content.meta_title || '',
         meta_description: content.meta_description || '',
+        footer_description: content.footer_description || '',
+        footer_address: content.footer_address || '',
       });
     }
   }, [content]);
@@ -207,6 +211,32 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
         </CardContent>
       </Card>
 
+      {/* Footer Section */}
+      <Card className="border-border bg-card">
+        <CardHeader>
+          <CardTitle className="text-lg text-foreground">🦶 Footer</CardTitle>
+          <CardDescription>Contenido del pie de página</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 md:grid-cols-1">
+          <div className="space-y-2">
+            <Label>Descripción</Label>
+            <Textarea
+              value={formData.footer_description}
+              onChange={(e) => handleChange('footer_description', e.target.value)}
+              placeholder="La mejor experiencia de casino en México..."
+              rows={2}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Dirección del Footer</Label>
+            <Input
+              value={formData.footer_address}
+              onChange={(e) => handleChange('footer_address', e.target.value)}
+              placeholder="Av. Principal #123, Ciudad de México"
+            />
+          </div>
+        </CardContent>
+      </Card>
       {/* Save Button */}
       <div className="flex justify-end">
         <Button
