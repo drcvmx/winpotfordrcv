@@ -41,7 +41,7 @@ const TenantPage = () => {
   // Branch View (all tenants except 'main')
   if (tenant === 'branch') {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <DevSwitcher />
         <Navbar />
         <BranchHeroSection />
@@ -62,7 +62,7 @@ const TenantPage = () => {
 
   // Corporate View (fallback)
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <DevSwitcher />
       <Navbar />
       <HeroSection />

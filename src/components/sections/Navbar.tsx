@@ -66,20 +66,20 @@ export function Navbar() {
             : 'bg-background/80 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-around py-2 px-1">
+        <div className="flex items-center justify-around py-2 px-1 overflow-x-auto no-scrollbar">
           {navigationItems.map((link: any) => {
             const IconComponent = ICON_MAP[link.name] || Home;
             return (
               <a
                 key={link.name}
                 href={link.href}
-                className="flex flex-col items-center gap-0.5 px-2 py-1 text-foreground/90 hover:text-accent transition-colors group"
+                className="flex flex-col items-center gap-0.5 px-1 min-w-0 py-1 text-foreground/90 hover:text-accent transition-colors group shrink-0"
               >
                 <IconComponent 
-                  className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" 
+                  className="h-4 w-4 text-accent group-hover:scale-110 transition-transform" 
                   strokeWidth={1.5}
                 />
-                <span className="text-[10px] sm:text-xs font-medium leading-tight">
+                <span className="text-[9px] sm:text-[10px] font-medium leading-tight whitespace-nowrap">
                   {link.name}
                 </span>
               </a>
