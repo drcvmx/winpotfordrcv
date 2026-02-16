@@ -11,6 +11,7 @@ import EventsEditorSection from "./EventsEditorSection";
 import { GamesEditorSection } from "./GamesEditorSection";
 import { FacilitiesEditorSection } from "./FacilitiesEditorSection";
 import LegalEditorSection from "./LegalEditorSection";
+import CasinoMapEditorSection from "./CasinoMapEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId } = useTenant();
@@ -82,6 +83,14 @@ export default function ContentEditorTab() {
                         >
                             ⚖️ <span className="hidden xs:inline">Legal</span><span className="xs:hidden">Legal</span>
                         </TabsTrigger>
+                        {tenantId === 'main' && (
+                            <TabsTrigger 
+                                value="casinos-map" 
+                                className="data-[state=active]:bg-casino-gold data-[state=active]:text-black whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
+                            >
+                                📍 <span className="hidden xs:inline">Mapas</span><span className="xs:hidden">Map.</span>
+                            </TabsTrigger>
+                        )}
                     </TabsList>
                 </div>
 
@@ -114,6 +123,13 @@ export default function ContentEditorTab() {
                 <TabsContent value="legal" className="mt-6">
                     <LegalEditorSection tenantId={tenantId} />
                 </TabsContent>
+
+                {/* Casino Maps Tab (only for main/corporate) */}
+                {tenantId === 'main' && (
+                    <TabsContent value="casinos-map" className="mt-6">
+                        <CasinoMapEditorSection />
+                    </TabsContent>
+                )}
             </Tabs>
         </div>
     );
