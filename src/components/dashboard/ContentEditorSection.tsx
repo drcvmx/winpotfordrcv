@@ -248,20 +248,12 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
           <CardTitle className="text-lg text-foreground">🔒 Aviso de Privacidad</CardTitle>
           <CardDescription>URL del documento de Aviso de Privacidad (Google Drive u otro enlace)</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2">
+        <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>URL Aviso de Privacidad (inicio de sección legal + contacto)</Label>
+            <Label>URL Aviso de Privacidad</Label>
             <Input
               value={formData.privacy_policy_url}
               onChange={(e) => handleChange('privacy_policy_url', e.target.value)}
-              placeholder="https://drive.google.com/file/d/..."
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>URL Aviso de Privacidad 2 (final de sección legal)</Label>
-            <Input
-              value={formData.privacy_policy_url_2}
-              onChange={(e) => handleChange('privacy_policy_url_2', e.target.value)}
               placeholder="https://drive.google.com/file/d/..."
             />
           </div>
