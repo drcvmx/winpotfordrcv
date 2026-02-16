@@ -217,3 +217,39 @@ export function useDeleteTenantGame() {
     },
   });
 }
+
+// Bulk reorder games
+export function useReorderTenantGames() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ tenantId, updates }: { tenantId: string; updates: { id: string; display_order: number }[] }) => {
+      // Update each game's display_order
+      const promises = updates.map(({ id, display_order }) =>
+        supabase
+          .from("tenant_games")
+          .update({ display_order })
+          .eq("id", id)
+      );
+      const results = await Promise.all(promises);
+      const error = results.find(r => r.error)?.error;
+      if (error) throw error;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["tenant-games", variables.tenantId] });
+      toast({
+        title: "Orden actualizado",
+        description: "El orden de los juegos se ha guardado.",
+        className: "bg-green-600 text-white border-none",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `No se pudo reordenar: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+}
