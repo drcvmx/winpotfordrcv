@@ -6,8 +6,6 @@ interface FloatingDecorationProps {
   className?: string;
   /** Vertical offset from top, e.g. "10%" or "50px" */
   top?: string;
-  /** Size class, default w-28 h-28 */
-  size?: string;
   /** Animation delay */
   delay?: number;
 }
@@ -17,23 +15,22 @@ export function FloatingDecoration({
   side,
   className = "",
   top = "50%",
-  size = "w-28 h-28 lg:w-36 lg:h-36",
   delay = 0,
 }: FloatingDecorationProps) {
   const positionClass = side === "left"
-    ? "-left-4 lg:-left-12 xl:-left-16"
-    : "-right-4 lg:-right-12 xl:-right-16";
+    ? "left-0 sm:left-0 md:-left-4 lg:-left-8 xl:-left-12"
+    : "right-0 sm:right-0 md:-right-4 lg:-right-8 xl:-right-12";
 
   return (
     <motion.img
       src={src}
       alt=""
       aria-hidden="true"
-      initial={{ opacity: 0, x: side === "left" ? -40 : 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: side === "left" ? -30 : 30 }}
+      whileInView={{ opacity: 0.85, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay }}
-      className={`absolute ${positionClass} ${size} object-contain pointer-events-none select-none z-10 hidden md:block ${className}`}
+      className={`absolute ${positionClass} w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 object-contain pointer-events-none select-none z-10 ${className}`}
       style={{ top }}
     />
   );
