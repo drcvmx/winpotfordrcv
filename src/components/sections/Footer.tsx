@@ -5,10 +5,20 @@ import { NavLinkAtom } from "@/components/ui/nav-link-atom";
 import { Text } from "@/components/ui/typography";
 import { quickLinks } from "@/data/navigation";
 import { contactInfo } from "@/data/stats";
+import { useTenant } from "@/context/TenantContext";
+import { useTenantContent } from "@/hooks/useTenantContent";
 import winpotLogoFooter from "@/assets/winpot-logo-footer.webp";
 import badge18Plus from "@/assets/18-plus-badge.webp";
 
 export function Footer() {
+  const { tenantId } = useTenant();
+  const { data: content } = useTenantContent(tenantId);
+
+  const description = content?.footer_description || "La mejor experiencia de casino en México. Más de 15 años ofreciendo entretenimiento de calidad.";
+  const phone = content?.contact_phone || contactInfo.phone;
+  const email = content?.contact_email || contactInfo.email;
+  const address = content?.footer_address || contactInfo.address;
+
   return (
     <footer id="contacto" className="bg-background border-t border-border">
       {/* Banner con logos */}
@@ -26,7 +36,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
             <Logo className="mb-4" />
-            <Text size="sm" textColor="muted" leading="relaxed">La mejor experiencia de casino en México. Más de 15 años ofreciendo entretenimiento de calidad.</Text>
+            <Text size="sm" textColor="muted" leading="relaxed">{description}</Text>
           </div>
           <div>
             <h4 className="text-foreground font-semibold mb-4">Enlaces Rápidos</h4>
@@ -37,9 +47,9 @@ export function Footer() {
           <div>
             <h4 className="text-foreground font-semibold mb-4">Contacto</h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-muted-foreground text-sm"><Phone className="w-4 h-4 text-accent" /><span>{contactInfo.phone}</span></li>
-              <li className="flex items-center gap-3 text-muted-foreground text-sm"><Mail className="w-4 h-4 text-accent" /><span>{contactInfo.email}</span></li>
-              <li className="flex items-start gap-3 text-muted-foreground text-sm"><MapPin className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" /><span>{contactInfo.address}</span></li>
+              <li className="flex items-center gap-3 text-muted-foreground text-sm"><Phone className="w-4 h-4 text-accent" /><span>{phone}</span></li>
+              <li className="flex items-center gap-3 text-muted-foreground text-sm"><Mail className="w-4 h-4 text-accent" /><span>{email}</span></li>
+              <li className="flex items-start gap-3 text-muted-foreground text-sm"><MapPin className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" /><span>{address}</span></li>
             </ul>
           </div>
         </div>

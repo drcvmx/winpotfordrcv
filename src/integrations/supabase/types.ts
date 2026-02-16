@@ -20,6 +20,8 @@ export type Database = {
           contact_hours: string | null
           contact_phone: string | null
           created_at: string
+          footer_address: string | null
+          footer_description: string | null
           hero_address: string | null
           hero_cta_primary_link: string | null
           hero_cta_primary_text: string | null
@@ -39,6 +41,8 @@ export type Database = {
           contact_hours?: string | null
           contact_phone?: string | null
           created_at?: string
+          footer_address?: string | null
+          footer_description?: string | null
           hero_address?: string | null
           hero_cta_primary_link?: string | null
           hero_cta_primary_text?: string | null
@@ -58,6 +62,8 @@ export type Database = {
           contact_hours?: string | null
           contact_phone?: string | null
           created_at?: string
+          footer_address?: string | null
+          footer_description?: string | null
           hero_address?: string | null
           hero_cta_primary_link?: string | null
           hero_cta_primary_text?: string | null

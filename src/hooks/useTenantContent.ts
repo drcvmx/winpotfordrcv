@@ -22,6 +22,9 @@ export interface TenantContent {
   // Metadata
   meta_title: string | null;
   meta_description: string | null;
+  // Footer
+  footer_description: string | null;
+  footer_address: string | null;
   // Timestamps
   created_at: string;
   updated_at: string;
@@ -42,6 +45,8 @@ export interface TenantContentInput {
   contact_hours?: string;
   meta_title?: string;
   meta_description?: string;
+  footer_description?: string;
+  footer_address?: string;
 }
 
 // Get default content from mock-tenant for a specific tenant
@@ -81,6 +86,8 @@ function getDefaultContent(tenantId: string): Partial<TenantContent> | null {
     contact_hours: scheduleStr || null,
     meta_title: metadata?.title || null,
     meta_description: hero?.description || null,
+    footer_description: 'La mejor experiencia de casino en México. Más de 15 años ofreciendo entretenimiento de calidad.',
+    footer_address: typeof hero?.address === 'object' ? hero.address.full : (hero?.address || 'Av. Principal #123, Ciudad de México, México'),
   };
 }
 
