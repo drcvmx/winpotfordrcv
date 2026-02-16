@@ -7,17 +7,23 @@ import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
 import rouletteImageFallback from "@/assets/roulette-contact.png";
 import { normalizeImageUrl } from "@/lib/url-utils";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
 
 export function ContactSection() {
-  const { tenantId } = useTenant();
+  const { tenantId, data } = useTenant();
   const { data: contactImageData } = useTenantImage(tenantId, 'contact');
+  const brandId = data?.brandId || 'winpot';
+  const decorations = getBrandDecorations(brandId);
   
-  // Use DB image if available, otherwise fallback to local asset
   const contactImage = contactImageData?.image_url || rouletteImageFallback;
   const contactAlt = contactImageData?.alt_text || "Ruleta de casino";
 
   return (
-    <SectionWrapper id="contacto" background="secondary">
+    <SectionWrapper id="contacto" background="secondary" className="relative overflow-hidden">
+      {/* Decoration: left side */}
+      <FloatingDecoration src={decorations[5]} side="left" top="30%" />
+
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image LEFT */}
