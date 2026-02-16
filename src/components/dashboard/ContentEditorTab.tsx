@@ -11,7 +11,7 @@ import EventsEditorSection from "./EventsEditorSection";
 import { GamesEditorSection } from "./GamesEditorSection";
 import { FacilitiesEditorSection } from "./FacilitiesEditorSection";
 import LegalEditorSection from "./LegalEditorSection";
-import CasinoMapEditorSection from "./CasinoMapEditorSection";
+import CasinoOverridesEditorSection from "./CasinoMapEditorSection";
 
 export default function ContentEditorTab() {
     const { tenantId, setTenantId } = useTenant();
@@ -127,7 +127,7 @@ export default function ContentEditorTab() {
                 {/* Casino Maps Tab (only for main/corporate) */}
                 {tenantId === 'main' && (
                     <TabsContent value="casinos-map" className="mt-6">
-                        <CasinoMapEditorSection />
+                        <CasinoOverridesEditorSection />
                     </TabsContent>
                 )}
             </Tabs>

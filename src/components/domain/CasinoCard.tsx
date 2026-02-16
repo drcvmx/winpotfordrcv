@@ -6,19 +6,27 @@ import { ContentCard } from "@/components/ui/content-card";
 import { Heading, Text } from "@/components/ui/typography";
 import { brandColors } from "@/data/casinos";
 import { normalizeImageUrl } from "@/lib/url-utils";
-import { useCasinoMapUrls } from "@/hooks/useCasinoMapUrls";
+import { useCasinoOverrides } from "@/hooks/useCasinoOverrides";
 
 interface CasinoCardProps {
   casino: CasinoType;
 }
 
 export function CasinoCard({ casino }: CasinoCardProps) {
-  const colors = brandColors[casino.brand];
-  const { data: mapUrls } = useCasinoMapUrls();
-  
-  // Use DB override if available, otherwise fallback to static data
-  const dbUrl = mapUrls?.find(m => m.casino_id === casino.id);
-  const googleMapsUrl = dbUrl?.google_maps_url || casino.googleMapsUrl;
+  const { data: overrides } = useCasinoOverrides();
+  const override = overrides?.find(o => o.casino_id === casino.id);
+
+  // Merge: DB override wins over static data
+  const city = override?.city || casino.city;
+  const brand = (override?.brand || casino.brand) as CasinoType['brand'];
+  const scheduleWeekdays = override?.schedule_weekdays || casino.schedule.weekdays;
+  const scheduleWeekend = override?.schedule_weekend ?? casino.schedule.weekend;
+  const address = override?.address || casino.address;
+  const imageUrl = override?.image_url || casino.imageUrl;
+  const googleMapsUrl = override?.google_maps_url || casino.googleMapsUrl;
+  const isOpen24h = override?.is_open_24h ?? casino.isOpen24h;
+
+  const colors = brandColors[brand] || brandColors.winpot;
 
   return (
     <motion.div
@@ -34,12 +42,12 @@ export function CasinoCard({ casino }: CasinoCardProps) {
       >
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
-            src={normalizeImageUrl(casino.imageUrl)}
-            alt={`Casino ${casino.city}`}
+            src={normalizeImageUrl(imageUrl)}
+            alt={`Casino ${city}`}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
-          {casino.isOpen24h && (
+          {isOpen24h && (
             <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-xs font-bold px-2 py-1 rounded">
               24 HRS
             </span>
@@ -47,26 +55,26 @@ export function CasinoCard({ casino }: CasinoCardProps) {
         </div>
         <div className="p-5 md:p-6 flex flex-col flex-1">
           <Heading as="h3" size="h3" className="text-foreground mb-1">
-            {casino.city}
+            {city}
           </Heading>
           <Text size="sm" className="font-semibold mb-4 capitalize" style={{ color: colors.hex }}>
-            {casino.brand}
+            {brand}
           </Text>
 
           <Text size="sm" textColor="muted" weight="medium" className="mb-2">
             Horarios de servicio:
           </Text>
           <Text size="sm" textColor="muted" className="mb-1">
-            {casino.schedule.weekdays}
+            {scheduleWeekdays}
           </Text>
-          {casino.schedule.weekend && (
+          {scheduleWeekend && (
             <Text size="sm" textColor="muted" className="mb-3">
-              {casino.schedule.weekend}
+              {scheduleWeekend}
             </Text>
           )}
 
           <Text size="sm" textColor="muted" className="mb-6 flex-1">
-            {casino.address}
+            {address}
           </Text>
 
           <div className="flex flex-col gap-2">

@@ -14,26 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
-      casino_map_urls: {
+      casino_overrides: {
         Row: {
+          address: string | null
+          brand: string | null
           casino_id: string
+          city: string | null
           created_at: string
-          google_maps_url: string
+          google_maps_url: string | null
           id: string
+          image_url: string | null
+          is_open_24h: boolean | null
+          schedule_weekdays: string | null
+          schedule_weekend: string | null
           updated_at: string
         }
         Insert: {
+          address?: string | null
+          brand?: string | null
           casino_id: string
+          city?: string | null
           created_at?: string
-          google_maps_url: string
+          google_maps_url?: string | null
           id?: string
+          image_url?: string | null
+          is_open_24h?: boolean | null
+          schedule_weekdays?: string | null
+          schedule_weekend?: string | null
           updated_at?: string
         }
         Update: {
+          address?: string | null
+          brand?: string | null
           casino_id?: string
+          city?: string | null
           created_at?: string
-          google_maps_url?: string
+          google_maps_url?: string | null
           id?: string
+          image_url?: string | null
+          is_open_24h?: boolean | null
+          schedule_weekdays?: string | null
+          schedule_weekend?: string | null
           updated_at?: string
         }
         Relationships: []
