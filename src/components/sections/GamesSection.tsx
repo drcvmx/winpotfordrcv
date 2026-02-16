@@ -10,6 +10,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
 
 interface GameCardProps {
     name: string;
@@ -105,9 +107,11 @@ function GameCarousel({ title, icon, games }: GameCarouselProps) {
 }
 
 export function GamesSection() {
-    const { tenantId, content } = useTenant();
+    const { tenantId, content, data } = useTenant();
     const { data: gamesFromDb, isLoading } = useTenantGames(tenantId);
     const gamesContent = content?.games;
+    const brandId = data?.brandId || 'winpot';
+    const decorations = getBrandDecorations(brandId);
 
     // Filtrar juegos activos por categoría
     const activeGames = gamesFromDb?.filter(g => g.is_active) || [];
@@ -138,7 +142,10 @@ export function GamesSection() {
     }
 
     return (
-        <SectionWrapper id="juegos" background="secondary">
+        <SectionWrapper id="juegos" background="secondary" className="relative overflow-hidden">
+            {/* Decoration: right side */}
+            <FloatingDecoration src={decorations[0]} side="right" top="20%" />
+
             <Container>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

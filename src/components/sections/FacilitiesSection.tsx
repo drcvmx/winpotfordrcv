@@ -5,20 +5,25 @@ import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantFacilities } from "@/hooks/useTenantFacilities";
 import { normalizeImageUrl } from "@/lib/url-utils";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
 
 export function FacilitiesSection() {
-    const { tenantId, content } = useTenant();
+    const { tenantId, content, data } = useTenant();
     const { data: dbFacilities, isLoading } = useTenantFacilities(tenantId);
+    const brandId = data?.brandId || 'winpot';
+    const decorations = getBrandDecorations(brandId);
 
-    // Use DB images if available, otherwise fall back to mock data
     const galleryImages = dbFacilities && dbFacilities.length > 0
         ? dbFacilities.map(f => ({ src: normalizeImageUrl(f.image_url), alt: f.alt_text || "Instalación" }))
         : content.facilities?.images || [];
-    // Don't render if no images available
     if (!isLoading && galleryImages.length === 0) return null;
 
     return (
-        <SectionWrapper id="instalaciones" background="secondary">
+        <SectionWrapper id="instalaciones" background="secondary" className="relative overflow-hidden">
+            {/* Decoration: right side */}
+            <FloatingDecoration src={decorations[4]} side="right" top="25%" />
+
             <Container>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
