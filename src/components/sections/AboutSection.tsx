@@ -6,10 +6,14 @@ import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
 import aboutBannerFallback from "@/assets/about-banner.webp";
 import { normalizeImageUrl } from "@/lib/url-utils";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
 
 export function AboutSection() {
-  const { tenantId, content } = useTenant();
+  const { tenantId, content, data } = useTenant();
   const { data: aboutImageData } = useTenantImage(tenantId, 'about');
+  const brandId = data?.brandId || 'winpot';
+  const decorations = getBrandDecorations(brandId);
   
   // Use DB image if available, then content.about.image, then fallback asset
   const aboutImage = aboutImageData?.image_url 
@@ -18,7 +22,8 @@ export function AboutSection() {
   const aboutAlt = aboutImageData?.alt_text || "Winpot Casino - Acerca de nosotros";
 
   return (
-    <SectionWrapper id="nosotros" background="default">
+    <SectionWrapper id="nosotros" background="default" className="relative overflow-hidden">
+      <FloatingDecoration src={decorations[3]} side="left" top="25%" />
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text LEFT */}

@@ -9,10 +9,18 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
+import { useTenant } from "@/context/TenantContext";
 
 export function FeaturesSection() {
+  const { data } = useTenant();
+  const brandId = data?.brandId || 'winpot';
+  const decorations = getBrandDecorations(brandId);
+
   return (
-    <SectionWrapper background="primary">
+    <SectionWrapper background="primary" className="relative overflow-hidden">
+      <FloatingDecoration src={decorations[0]} side="right" top="20%" />
       <Container>
         {/* Mobile Carousel */}
         <div className="md:hidden">

@@ -7,6 +7,9 @@ import { CasinoCard } from "@/components/domain/CasinoCard";
 import { casinos, brandFilters } from "@/data/casinos";
 import { useCasinoOverrides } from "@/hooks/useCasinoOverrides";
 import type { CasinoType } from "@/types";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
+import { useTenant } from "@/context/TenantContext";
 import {
   Carousel,
   CarouselContent,
@@ -45,8 +48,14 @@ export function CasinosSection() {
     ? allCasinos 
     : allCasinos.filter((c) => c.brand === activeFilter);
 
+  const { data } = useTenant();
+  const brandId = data?.brandId || 'winpot';
+  const decorations = getBrandDecorations(brandId);
+
   return (
-    <SectionWrapper id="casinos" background="secondary">
+    <SectionWrapper id="casinos" background="secondary" className="relative overflow-hidden">
+      <FloatingDecoration src={decorations[1]} side="left" top="10%" />
+      <FloatingDecoration src={decorations[2]} side="right" top="70%" />
       <Container>
         <div className="text-center mb-12">
           <Heading className="mb-4">
