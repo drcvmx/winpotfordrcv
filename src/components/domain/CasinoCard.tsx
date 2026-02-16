@@ -6,6 +6,7 @@ import { ContentCard } from "@/components/ui/content-card";
 import { Heading, Text } from "@/components/ui/typography";
 import { brandColors } from "@/data/casinos";
 import { normalizeImageUrl } from "@/lib/url-utils";
+import { useCasinoMapUrls } from "@/hooks/useCasinoMapUrls";
 
 interface CasinoCardProps {
   casino: CasinoType;
@@ -13,6 +14,11 @@ interface CasinoCardProps {
 
 export function CasinoCard({ casino }: CasinoCardProps) {
   const colors = brandColors[casino.brand];
+  const { data: mapUrls } = useCasinoMapUrls();
+  
+  // Use DB override if available, otherwise fallback to static data
+  const dbUrl = mapUrls?.find(m => m.casino_id === casino.id);
+  const googleMapsUrl = dbUrl?.google_maps_url || casino.googleMapsUrl;
 
   return (
     <motion.div
@@ -71,7 +77,7 @@ export function CasinoCard({ casino }: CasinoCardProps) {
               Visitar Sitio
             </Link>
             <a
-              href={casino.googleMapsUrl}
+              href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 border border-casino-gold/50 hover:bg-casino-gold/10 text-casino-gold font-medium px-6 py-2 rounded transition-all text-sm"

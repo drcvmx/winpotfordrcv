@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      casino_map_urls: {
+        Row: {
+          casino_id: string
+          created_at: string
+          google_maps_url: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          casino_id: string
+          created_at?: string
+          google_maps_url: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          casino_id?: string
+          created_at?: string
+          google_maps_url?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tenant_content: {
         Row: {
           contact_email: string | null
