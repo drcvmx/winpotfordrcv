@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/typography";
 import { ContactForm } from "@/components/domain/ContactForm";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantImage } from "@/hooks/useTenantImages";
+import { useTenantContent } from "@/hooks/useTenantContent";
 import rouletteImageFallback from "@/assets/roulette-contact.png";
 import { normalizeImageUrl } from "@/lib/url-utils";
 import { FloatingDecoration } from "@/components/ui/floating-decoration";
@@ -13,7 +14,9 @@ import { getBrandDecorations } from "@/data/brand-decorations";
 export function ContactSection() {
   const { tenantId, data } = useTenant();
   const { data: contactImageData } = useTenantImage(tenantId, 'contact');
+  const { data: content } = useTenantContent(tenantId);
   const brandId = data?.brandId || 'winpot';
+  const privacyUrl = content?.privacy_policy_url;
   const decorations = getBrandDecorations(brandId);
   
   const contactImage = contactImageData?.image_url || rouletteImageFallback;
@@ -52,6 +55,18 @@ export function ContactSection() {
               CONTACTO
             </Heading>
             <ContactForm />
+            {privacyUrl && (
+              <div className="mt-6 text-center lg:text-left">
+                <a
+                  href={privacyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground underline hover:text-primary transition-colors"
+                >
+                  Aviso de Privacidad
+                </a>
+              </div>
+            )}
           </motion.div>
         </div>
       </Container>

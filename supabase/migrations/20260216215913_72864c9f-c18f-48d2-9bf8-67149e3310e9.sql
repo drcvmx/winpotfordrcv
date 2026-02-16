@@ -1,0 +1,1 @@
+ALTER TABLE public.tenant_content ADD COLUMN privacy_policy_url TEXT DEFAULT NULL;

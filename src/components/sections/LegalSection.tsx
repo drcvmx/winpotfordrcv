@@ -1,12 +1,15 @@
 import { Container } from "@/components/ui/container";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantLegal, DEFAULT_LEGAL_TEXT } from "@/hooks/useTenantLegal";
+import { useTenantContent } from "@/hooks/useTenantContent";
 
 export function LegalSection() {
   const { tenantId, theme } = useTenant();
   const { data: legalData } = useTenantLegal(tenantId);
+  const { data: content } = useTenantContent(tenantId);
   
   const legalText = legalData?.legal_text || DEFAULT_LEGAL_TEXT;
+  const privacyUrl = content?.privacy_policy_url;
   
   // Get brand-specific accent color for the top border
   const getBrandAccent = () => {
@@ -27,6 +30,18 @@ export function LegalSection() {
     <section className={`bg-muted/30 border-t-2 ${getBrandAccent()} py-8`}>
       <Container>
         <div className="max-w-4xl mx-auto">
+          {privacyUrl && (
+            <p className="text-xs text-muted-foreground leading-relaxed mb-3 text-center">
+              <a
+                href={privacyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-primary transition-colors"
+              >
+                Aviso de Privacidad
+              </a>
+            </p>
+          )}
           {legalText.split('\n\n').map((paragraph, index) => (
             <p 
               key={index} 
@@ -35,6 +50,18 @@ export function LegalSection() {
               {paragraph}
             </p>
           ))}
+          {privacyUrl && (
+            <p className="text-xs text-muted-foreground leading-relaxed mt-3 text-center">
+              <a
+                href={privacyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-primary transition-colors"
+              >
+                Aviso de Privacidad
+              </a>
+            </p>
+          )}
         </div>
       </Container>
     </section>
