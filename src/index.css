@@ -15,6 +15,10 @@
 }
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+  }
+
   :root {
     /* Casino Color Palette */
     --casino-red: 352 100% 58%;
