@@ -5,6 +5,8 @@ import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { CasinoCard } from "@/components/domain/CasinoCard";
 import { casinos, brandFilters } from "@/data/casinos";
+import { useCasinoOverrides } from "@/hooks/useCasinoOverrides";
+import type { CasinoType } from "@/types";
 import {
   Carousel,
   CarouselContent,
@@ -13,10 +15,35 @@ import {
 
 export function CasinosSection() {
   const [activeFilter, setActiveFilter] = useState("all");
-  
+  const { data: overrides } = useCasinoOverrides();
+
+  // Static casino IDs
+  const staticCasinoIds = new Set(casinos.map(c => c.id));
+
+  // Build CasinoType objects from DB-only overrides
+  const dbOnlyCasinos: CasinoType[] = (overrides || [])
+    .filter(o => !staticCasinoIds.has(o.casino_id))
+    .map(o => ({
+      id: o.casino_id,
+      city: o.city || 'Sin nombre',
+      brand: (o.brand as CasinoType['brand']) || 'winpot',
+      schedule: {
+        weekdays: o.schedule_weekdays || '',
+        weekend: o.schedule_weekend || undefined,
+      },
+      address: o.address || '',
+      imageUrl: o.image_url || '/placeholder.svg',
+      isOpen24h: o.is_open_24h ?? false,
+      externalLink: '',
+      googleMapsUrl: o.google_maps_url || '',
+      isDbOnly: true,
+    } as CasinoType & { isDbOnly?: boolean }));
+
+  const allCasinos = [...casinos, ...dbOnlyCasinos];
+
   const filteredCasinos = activeFilter === "all" 
-    ? casinos 
-    : casinos.filter((c) => c.brand === activeFilter);
+    ? allCasinos 
+    : allCasinos.filter((c) => c.brand === activeFilter);
 
   return (
     <SectionWrapper id="casinos" background="secondary">

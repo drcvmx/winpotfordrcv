@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import type { CasinoType } from "@/types";
 import { ContentCard } from "@/components/ui/content-card";
 import { Heading, Text } from "@/components/ui/typography";
-import { brandColors } from "@/data/casinos";
+import { brandColors, casinos as staticCasinos } from "@/data/casinos";
 import { normalizeImageUrl } from "@/lib/url-utils";
 import { useCasinoOverrides } from "@/hooks/useCasinoOverrides";
 
@@ -15,6 +15,9 @@ interface CasinoCardProps {
 export function CasinoCard({ casino }: CasinoCardProps) {
   const { data: overrides } = useCasinoOverrides();
   const override = overrides?.find(o => o.casino_id === casino.id);
+
+  // Check if this casino exists in static data (has a tenant page)
+  const hasStaticPage = staticCasinos.some(c => c.id === casino.id);
 
   // Merge: DB override wins over static data
   const city = override?.city || casino.city;
@@ -61,16 +64,20 @@ export function CasinoCard({ casino }: CasinoCardProps) {
             {brand}
           </Text>
 
-          <Text size="sm" textColor="muted" weight="medium" className="mb-2">
-            Horarios de servicio:
-          </Text>
-          <Text size="sm" textColor="muted" className="mb-1">
-            {scheduleWeekdays}
-          </Text>
-          {scheduleWeekend && (
-            <Text size="sm" textColor="muted" className="mb-3">
-              {scheduleWeekend}
-            </Text>
+          {scheduleWeekdays && (
+            <>
+              <Text size="sm" textColor="muted" weight="medium" className="mb-2">
+                Horarios de servicio:
+              </Text>
+              <Text size="sm" textColor="muted" className="mb-1">
+                {scheduleWeekdays}
+              </Text>
+              {scheduleWeekend && (
+                <Text size="sm" textColor="muted" className="mb-3">
+                  {scheduleWeekend}
+                </Text>
+              )}
+            </>
           )}
 
           <Text size="sm" textColor="muted" className="mb-6 flex-1">
@@ -78,21 +85,25 @@ export function CasinoCard({ casino }: CasinoCardProps) {
           </Text>
 
           <div className="flex flex-col gap-2">
-            <Link
-              to={`/${casino.id}`}
-              className="inline-block bg-casino-gold hover:bg-casino-gold/90 text-casino-black font-semibold px-8 py-3 rounded transition-all text-sm text-center"
-            >
-              Visitar Sitio
-            </Link>
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 border border-casino-gold/50 hover:bg-casino-gold/10 text-casino-gold font-medium px-6 py-2 rounded transition-all text-sm"
-            >
-              <MapPin className="w-4 h-4" />
-              Ver en Mapa
-            </a>
+            {hasStaticPage && (
+              <Link
+                to={`/${casino.id}`}
+                className="inline-block bg-casino-gold hover:bg-casino-gold/90 text-casino-black font-semibold px-8 py-3 rounded transition-all text-sm text-center"
+              >
+                Visitar Sitio
+              </Link>
+            )}
+            {googleMapsUrl && (
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 border border-casino-gold/50 hover:bg-casino-gold/10 text-casino-gold font-medium px-6 py-2 rounded transition-all text-sm"
+              >
+                <MapPin className="w-4 h-4" />
+                Ver en Mapa
+              </a>
+            )}
           </div>
         </div>
       </ContentCard>
