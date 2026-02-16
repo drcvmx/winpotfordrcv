@@ -513,7 +513,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
               {editingEvent.image_url && (
                 <div className="mt-2">
                   <img
-                    src={editingEvent.image_url}
+                    src={normalizeImageUrl(editingEvent.image_url)}
                     alt="Preview"
                     className="h-32 w-auto rounded-lg object-cover border border-border"
                     onError={(e) => (e.currentTarget.style.display = 'none')}
@@ -574,7 +574,7 @@ export default function EventsEditorSection({ tenantId }: EventsEditorSectionPro
             <div className="relative">
               {event.image_url ? (
                 <img
-                  src={event.image_url}
+                  src={normalizeImageUrl(event.image_url)}
                   alt={event.title}
                   className="w-full h-32 object-cover rounded-t-lg"
                 />

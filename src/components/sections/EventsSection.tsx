@@ -67,7 +67,7 @@ export function EventsSection() {
                             >
                                 <div className="h-64 lg:h-auto">
                                     {event.image_url ? (
-                                        <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                                        <img src={normalizeImageUrl(event.image_url)} alt={event.title} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full bg-muted flex items-center justify-center">
                                             <Calendar className="w-16 h-16 text-muted-foreground" />
