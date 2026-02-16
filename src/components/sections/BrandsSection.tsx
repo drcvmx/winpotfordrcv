@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { normalizeImageUrl } from "@/lib/url-utils";
+import { FloatingDecoration } from "@/components/ui/floating-decoration";
+import { getBrandDecorations } from "@/data/brand-decorations";
+import { useTenant } from "@/context/TenantContext";
 
 import winpotLogo from "@/assets/winpot-logo.svg";
 import capriLogo from "@/assets/capri-logo.svg";
@@ -23,8 +26,13 @@ const brandLogos = [
 ];
 
 export function BrandsSection() {
+  const { data } = useTenant();
+  const brandId = data?.brandId || 'winpot';
+  const decorations = getBrandDecorations(brandId);
+
   return (
-    <SectionWrapper background="secondary" padding="lg">
+    <SectionWrapper background="secondary" padding="lg" className="relative overflow-hidden">
+      <FloatingDecoration src={decorations[4]} side="right" top="30%" />
       <Container>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
