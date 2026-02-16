@@ -32,6 +32,7 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
     footer_description: '',
     footer_address: '',
     privacy_policy_url: '',
+    privacy_policy_url_2: '',
   });
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
         footer_description: content.footer_description || '',
         footer_address: content.footer_address || '',
         privacy_policy_url: (content as any).privacy_policy_url || '',
+        privacy_policy_url_2: (content as any).privacy_policy_url_2 || '',
       });
     }
   }, [content]);
@@ -246,12 +248,20 @@ export default function ContentEditorSection({ tenantId }: ContentEditorSectionP
           <CardTitle className="text-lg text-foreground">🔒 Aviso de Privacidad</CardTitle>
           <CardDescription>URL del documento de Aviso de Privacidad (Google Drive u otro enlace)</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>URL del Aviso de Privacidad</Label>
+            <Label>URL Aviso de Privacidad (inicio de sección legal + contacto)</Label>
             <Input
               value={formData.privacy_policy_url}
               onChange={(e) => handleChange('privacy_policy_url', e.target.value)}
+              placeholder="https://drive.google.com/file/d/..."
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>URL Aviso de Privacidad 2 (final de sección legal)</Label>
+            <Input
+              value={formData.privacy_policy_url_2}
+              onChange={(e) => handleChange('privacy_policy_url_2', e.target.value)}
               placeholder="https://drive.google.com/file/d/..."
             />
           </div>

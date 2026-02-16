@@ -9,7 +9,8 @@ export function LegalSection() {
   const { data: content } = useTenantContent(tenantId);
   
   const legalText = legalData?.legal_text || DEFAULT_LEGAL_TEXT;
-  const privacyUrl = content?.privacy_policy_url;
+  const privacyUrl1 = content?.privacy_policy_url;
+  const privacyUrl2 = (content as any)?.privacy_policy_url_2;
   
   // Get brand-specific accent color for the top border
   const getBrandAccent = () => {
@@ -30,10 +31,10 @@ export function LegalSection() {
     <section className={`bg-muted/30 border-t-2 ${getBrandAccent()} py-8`}>
       <Container>
         <div className="max-w-4xl mx-auto">
-          {privacyUrl && (
+          {privacyUrl1 && (
             <p className="text-xs text-muted-foreground leading-relaxed mb-3 text-center">
               <a
-                href={privacyUrl}
+                href={privacyUrl1}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-primary transition-colors"
@@ -50,10 +51,10 @@ export function LegalSection() {
               {paragraph}
             </p>
           ))}
-          {privacyUrl && (
+          {privacyUrl2 && (
             <p className="text-xs text-muted-foreground leading-relaxed mt-3 text-center">
               <a
-                href={privacyUrl}
+                href={privacyUrl2}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-primary transition-colors"

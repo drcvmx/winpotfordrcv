@@ -79,6 +79,7 @@ export type Database = {
           meta_description: string | null
           meta_title: string | null
           privacy_policy_url: string | null
+          privacy_policy_url_2: string | null
           tenant_id: string
           updated_at: string
         }
@@ -101,6 +102,7 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           privacy_policy_url?: string | null
+          privacy_policy_url_2?: string | null
           tenant_id: string
           updated_at?: string
         }
@@ -123,6 +125,7 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           privacy_policy_url?: string | null
+          privacy_policy_url_2?: string | null
           tenant_id?: string
           updated_at?: string
         }

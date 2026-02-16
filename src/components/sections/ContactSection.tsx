@@ -54,19 +54,7 @@ export function ContactSection() {
             <Heading className="text-primary mb-8">
               CONTACTO
             </Heading>
-            <ContactForm />
-            {privacyUrl && (
-              <div className="mt-6 text-center lg:text-left">
-                <a
-                  href={privacyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground underline hover:text-primary transition-colors"
-                >
-                  Aviso de Privacidad
-                </a>
-              </div>
-            )}
+            <ContactForm privacyUrl={privacyUrl} />
           </motion.div>
         </div>
       </Container>
