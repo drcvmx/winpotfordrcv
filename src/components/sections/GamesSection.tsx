@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { Heading, Text } from "@/components/ui/typography";
 import { useTenant } from "@/context/TenantContext";
 import { useTenantGames } from "@/hooks/useTenantGames";
+import { normalizeImageUrl } from "@/lib/url-utils";
 import { Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -21,7 +22,7 @@ function GameCard({ name, image }: GameCardProps) {
             <div className="group relative overflow-hidden casino-card hover:border-primary/50 transition-all duration-300">
                 <div className="p-2">
                     <img
-                        src={image}
+                        src={normalizeImageUrl(image)}
                         alt={name}
                         className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                     />
