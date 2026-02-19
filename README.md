@@ -50,6 +50,20 @@ Para correr el proyecto localmente:
 
 4.  Abrir `http://localhost:8080` en tu navegador.
 
+## 🔑 Acceso Administrativo (/login)
+
+La aplicación cuenta con una ruta protegida `/login` que simula el acceso al sistema de gestión.
+
+**¿Para qué sirve?**
+Al iniciar sesión (botón "Entrar al Dashboard"), se desbloquean las **funciones de administrador** que no están visibles para el usuario público:
+
+-   **Dashboard Completo**: Panel de control para gestionar todo el contenido.
+-   **Edición en Vivo**: Capacidad de modificar textos, imágenes y configuraciones de cada casino.
+-   **Gestión de Catálogos**: Agregar, quitar o reordenar juegos y eventos.
+-   **Vista de Admin**: El "Dev Switcher" ahora permite saltar directamente al Dashboard.
+
+> **Nota**: En esta demo, el login es simulado y no requiere credenciales reales. Simplemente otorga el rol de `superadmin` localmente.
+
 ## 🧪 Guía de Uso Rápido
 
 1.  Al abrir la aplicación, verás una pantalla de **Login Simplificado**.
