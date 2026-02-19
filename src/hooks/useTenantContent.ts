@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";
+import { demoData } from "@/lib/demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { TENANTS } from "@/data/mock-tenant";
 
@@ -101,29 +102,27 @@ export function useTenantContent(tenantId: string) {
   return useQuery({
     queryKey: ['tenant-content', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_content')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .maybeSingle();
-      
-      if (error) throw error;
-      
-      // If no DB data exists, return defaults from mock-tenant
+      // DEMO MODE: Fetch from local storage
+      const data = demoData.getTenantContent(tenantId);
+
+      // If no local data exists yet (first run), get default from mock and save it
       if (!data) {
         const defaults = getDefaultContent(tenantId);
         if (defaults) {
-          return {
-            id: '',
+          const initialData = {
+            id: `local-${tenantId}`,
             tenant_id: tenantId,
-            created_at: '',
-            updated_at: '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             ...defaults,
-          } as TenantContent;
+          };
+          demoData.setTenantContent(tenantId, initialData);
+          return initialData as TenantContent;
         }
+        return null; // Should not happen for valid tenants
       }
-      
-      return data as TenantContent | null;
+
+      return data as TenantContent;
     },
     enabled: !!tenantId,
   });
@@ -136,20 +135,26 @@ export function useUpsertTenantContent() {
 
   return useMutation({
     mutationFn: async (input: TenantContentInput) => {
-      const { data, error } = await supabase
-        .from('tenant_content')
-        .upsert(input, { onConflict: 'tenant_id' })
-        .select()
-        .single();
+      // DEMO MODE: Update local storage
+      const current = demoData.getTenantContent(input.tenant_id) || {};
+      const updated = {
+        ...current,
+        ...input,
+        updated_at: new Date().toISOString()
+      };
 
-      if (error) throw error;
-      return data;
+      demoData.setTenantContent(input.tenant_id, updated);
+
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      return updated;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-content', variables.tenant_id] });
       toast({
         title: "Contenido guardado",
-        description: "Los cambios han sido guardados correctamente.",
+        description: "Los cambios han sido guardados correctamente (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },

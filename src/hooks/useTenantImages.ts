@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";
+import { demoData } from "@/lib/demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeImageUrl } from "@/lib/url-utils";
 
@@ -20,13 +21,9 @@ export function useTenantImages(tenantId: string) {
   return useQuery({
     queryKey: ['tenant-images', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_images')
-        .select('*')
-        .eq('tenant_id', tenantId);
-      
-      if (error) throw error;
-      
+      // DEMO MODE
+      const data = demoData.getTenantImages(tenantId);
+
       // Normalize Google Drive URLs
       return (data as TenantImage[]).map(img => ({
         ...img,
@@ -42,20 +39,15 @@ export function useTenantImage(tenantId: string, section: ImageSection) {
   return useQuery({
     queryKey: ['tenant-image', tenantId, section],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_images')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .eq('section', section)
-        .maybeSingle();
-      
-      if (error) throw error;
-      
+      // DEMO MODE
+      const data = demoData.getTenantImages(tenantId);
+      const image = data.find((img: any) => img.section === section);
+
       // Normalize Google Drive URL
-      if (data) {
+      if (image) {
         return {
-          ...data,
-          image_url: normalizeImageUrl(data.image_url),
+          ...image,
+          image_url: normalizeImageUrl(image.image_url),
         } as TenantImage;
       }
       return null;
@@ -83,32 +75,35 @@ export function useUpsertTenantImage() {
     }) => {
       // Normalize URL before saving
       const normalizedUrl = normalizeImageUrl(imageUrl);
-      
-      const { data, error } = await supabase
-        .from('tenant_images')
-        .upsert(
-          {
-            tenant_id: tenantId,
-            section: section,
-            image_url: normalizedUrl,
-            alt_text: altText || null,
-          },
-          {
-            onConflict: 'tenant_id,section',
-          }
-        )
-        .select()
-        .single();
+      const currentImages = demoData.getTenantImages(tenantId);
 
-      if (error) throw error;
-      return data;
+      const index = currentImages.findIndex((img: any) => img.section === section);
+
+      const newImage = {
+        id: index !== -1 ? currentImages[index].id : `local-image-${Date.now()}`,
+        tenant_id: tenantId,
+        section: section,
+        image_url: normalizedUrl,
+        alt_text: altText || null,
+        created_at: index !== -1 ? currentImages[index].created_at : new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      if (index !== -1) {
+        currentImages[index] = newImage;
+      } else {
+        currentImages.push(newImage);
+      }
+
+      demoData.setTenantImages(tenantId, currentImages);
+      return newImage;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-images', variables.tenantId] });
       queryClient.invalidateQueries({ queryKey: ['tenant-image', variables.tenantId, variables.section] });
       toast({
         title: "Imagen actualizada",
-        description: `La imagen de ${variables.section} ha sido guardada.`,
+        description: `La imagen de ${variables.section} ha sido guardada (Modo Demo).`,
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -135,20 +130,16 @@ export function useDeleteTenantImage() {
       tenantId: string;
       section: ImageSection;
     }) => {
-      const { error } = await supabase
-        .from('tenant_images')
-        .delete()
-        .eq('tenant_id', tenantId)
-        .eq('section', section);
-
-      if (error) throw error;
+      const currentImages = demoData.getTenantImages(tenantId);
+      const filtered = currentImages.filter((img: any) => img.section !== section);
+      demoData.setTenantImages(tenantId, filtered);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-images', variables.tenantId] });
       queryClient.invalidateQueries({ queryKey: ['tenant-image', variables.tenantId, variables.section] });
       toast({
         title: "Imagen eliminada",
-        description: "Se usará la imagen por defecto.",
+        description: "Se usará la imagen por defecto (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },

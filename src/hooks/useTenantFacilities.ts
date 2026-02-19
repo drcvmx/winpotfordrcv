@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";
+import { demoData } from "@/lib/demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeImageUrl } from "@/lib/url-utils";
 
@@ -19,18 +20,16 @@ export function useTenantFacilities(tenantId: string) {
   return useQuery({
     queryKey: ['tenant-facilities', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_facilities')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .eq('is_active', true)
-        .order('display_order', { ascending: true });
-      
-      if (error) throw error;
-      return (data as TenantFacility[]).map((f) => ({
-        ...f,
-        image_url: normalizeImageUrl(f.image_url),
-      }));
+      // DEMO MODE
+      const data = demoData.getTenantFacilities(tenantId);
+
+      return (data as TenantFacility[])
+        .filter(f => f.is_active)
+        .map((f) => ({
+          ...f,
+          image_url: normalizeImageUrl(f.image_url),
+        }))
+        .sort((a, b) => a.display_order - b.display_order);
     },
     enabled: !!tenantId,
   });
@@ -41,17 +40,13 @@ export function useTenantFacilitiesAdmin(tenantId: string) {
   return useQuery({
     queryKey: ['tenant-facilities-admin', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_facilities')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .order('display_order', { ascending: true });
-      
-      if (error) throw error;
+      // DEMO MODE
+      const data = demoData.getTenantFacilities(tenantId);
+
       return (data as TenantFacility[]).map((f) => ({
         ...f,
         image_url: normalizeImageUrl(f.image_url),
-      }));
+      })).sort((a, b) => a.display_order - b.display_order);
     },
     enabled: !!tenantId,
   });
@@ -76,27 +71,30 @@ export function useAddTenantFacility() {
     }) => {
       // Normalize URL (converts Google Drive URLs to embed format)
       const normalizedUrl = normalizeImageUrl(imageUrl);
-      
-      const { data, error } = await supabase
-        .from('tenant_facilities')
-        .insert({
-          tenant_id: tenantId,
-          image_url: normalizedUrl,
-          alt_text: altText || null,
-          display_order: displayOrder || 0,
-        })
-        .select()
-        .single();
+      const currentFacilities = demoData.getTenantFacilities(tenantId);
 
-      if (error) throw error;
-      return data;
+      const newFacility = {
+        id: `local-facility-${Date.now()}`,
+        tenant_id: tenantId,
+        image_url: normalizedUrl,
+        alt_text: altText || null,
+        display_order: displayOrder || 0,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      currentFacilities.push(newFacility);
+      demoData.setTenantFacilities(tenantId, currentFacilities);
+
+      return newFacility;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities', variables.tenantId] });
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities-admin', variables.tenantId] });
       toast({
         title: "Imagen agregada",
-        description: "La imagen de instalación ha sido agregada.",
+        description: "La imagen de instalación ha sido agregada (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -131,29 +129,30 @@ export function useUpdateTenantFacility() {
       displayOrder?: number;
       isActive?: boolean;
     }) => {
-      const updateData: Record<string, unknown> = {};
-      // Normalize URL if provided (converts Google Drive URLs to embed format)
+      const currentFacilities = demoData.getTenantFacilities(tenantId);
+      const index = currentFacilities.findIndex((f: any) => f.id === id);
+
+      if (index === -1) throw new Error("Facility not found");
+
+      const updateData: any = { ...currentFacilities[index] };
+
       if (imageUrl !== undefined) updateData.image_url = normalizeImageUrl(imageUrl);
       if (altText !== undefined) updateData.alt_text = altText;
       if (displayOrder !== undefined) updateData.display_order = displayOrder;
       if (isActive !== undefined) updateData.is_active = isActive;
 
-      const { data, error } = await supabase
-        .from('tenant_facilities')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+      updateData.updated_at = new Date().toISOString();
 
-      if (error) throw error;
-      return data;
+      currentFacilities[index] = updateData;
+      demoData.setTenantFacilities(tenantId, currentFacilities);
+      return updateData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities', variables.tenantId] });
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities-admin', variables.tenantId] });
       toast({
         title: "Imagen actualizada",
-        description: "Los cambios han sido guardados.",
+        description: "Los cambios han sido guardados (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -180,19 +179,16 @@ export function useDeleteTenantFacility() {
       id: string;
       tenantId: string;
     }) => {
-      const { error } = await supabase
-        .from('tenant_facilities')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const currentFacilities = demoData.getTenantFacilities(tenantId);
+      const filtered = currentFacilities.filter((f: any) => f.id !== id);
+      demoData.setTenantFacilities(tenantId, filtered);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities', variables.tenantId] });
       queryClient.invalidateQueries({ queryKey: ['tenant-facilities-admin', variables.tenantId] });
       toast({
         title: "Imagen eliminada",
-        description: "La imagen ha sido eliminada de la galería.",
+        description: "La imagen ha sido eliminada de la galería (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },

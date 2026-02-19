@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";
+import { demoData } from "@/lib/demo-data";
 import { useToast } from "@/hooks/use-toast";
 
 export interface TenantLegal {
@@ -28,19 +29,14 @@ export function useTenantLegal(tenantId: string) {
   return useQuery({
     queryKey: ['tenant-legal', tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('tenant_legal')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .maybeSingle();
-      
-      if (error) throw error;
-      
+      // DEMO MODE
+      const data = demoData.getTenantLegal(tenantId);
+
       // Return data or default
-      if (data) {
-        return data as TenantLegal;
+      if (data && data.length > 0) {
+        return data[0] as TenantLegal;
       }
-      
+
       // Return default structure if no data exists
       return {
         id: '',
@@ -60,28 +56,25 @@ export function useUpsertTenantLegal() {
 
   return useMutation({
     mutationFn: async (input: TenantLegalInput) => {
-      const { data, error } = await supabase
-        .from('tenant_legal')
-        .upsert(
-          {
-            tenant_id: input.tenant_id,
-            legal_text: input.legal_text,
-          },
-          {
-            onConflict: 'tenant_id',
-          }
-        )
-        .select()
-        .single();
+      // DEMO MODE
+      const currentLegal = demoData.getTenantLegal(input.tenant_id);
 
-      if (error) throw error;
-      return data;
+      const newLegal = {
+        id: currentLegal.length > 0 ? currentLegal[0].id : `local-legal-${Date.now()}`,
+        tenant_id: input.tenant_id,
+        legal_text: input.legal_text,
+        created_at: currentLegal.length > 0 ? currentLegal[0].created_at : new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      demoData.setTenantLegal(input.tenant_id, [newLegal]);
+      return newLegal;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tenant-legal', variables.tenant_id] });
       toast({
         title: "Texto legal actualizado",
-        description: "Los cambios se han guardado correctamente.",
+        description: "Los cambios se han guardado correctamente (Modo Demo).",
       });
     },
     onError: (error) => {

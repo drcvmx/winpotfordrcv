@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";
+import { demoData } from "@/lib/demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { TENANTS } from "@/data/mock-tenant";
 
@@ -97,21 +98,16 @@ export function useTenantGames(tenantId: string) {
   return useQuery({
     queryKey: ["tenant-games", tenantId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("tenant_games")
-        .select("*")
-        .eq("tenant_id", tenantId)
-        .order("category")
-        .order("display_order");
-      
-      if (error) throw error;
-      
-      // If no DB data exists, return defaults from mock-tenant
-      if (!data || data.length === 0) {
-        return getDefaultGames(tenantId);
-      }
-      
-      return data as TenantGame[];
+      // DEMO MODE: Fetch from local storage
+      const data = demoData.getTenantGames(tenantId);
+
+      // Sort by category and then display_order
+      // 'new' comes first (arbitrary choice, or follows UI logic), then 'top'
+      // The original code ordered by category then display_order.
+      return data.sort((a: TenantGame, b: TenantGame) => {
+        if (a.category !== b.category) return a.category.localeCompare(b.category);
+        return a.display_order - b.display_order;
+      }) as TenantGame[];
     },
     enabled: !!tenantId,
   });
@@ -124,20 +120,27 @@ export function useAddTenantGame() {
 
   return useMutation({
     mutationFn: async (game: TenantGameInput) => {
-      const { data, error } = await supabase
-        .from("tenant_games")
-        .insert(game)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const currentGames = demoData.getTenantGames(game.tenant_id);
+
+      const newGame: TenantGame = {
+        id: `local-game-${Date.now()}`,
+        ...game,
+        display_order: game.display_order ?? currentGames.length,
+        is_active: game.is_active ?? true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      currentGames.push(newGame);
+      demoData.setTenantGames(game.tenant_id, currentGames);
+
+      return newGame;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tenant-games", variables.tenant_id] });
       toast({
         title: "Juego agregado",
-        description: "El juego se ha agregado correctamente.",
+        description: "El juego se ha agregado correctamente (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -158,21 +161,27 @@ export function useUpdateTenantGame() {
 
   return useMutation({
     mutationFn: async ({ id, tenantId, updates }: { id: string; tenantId: string; updates: Partial<TenantGameInput> }) => {
-      const { data, error } = await supabase
-        .from("tenant_games")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const currentGames = demoData.getTenantGames(tenantId);
+      const gameIndex = currentGames.findIndex((g: TenantGame) => g.id === id);
+
+      if (gameIndex === -1) throw new Error("Game not found");
+
+      const updatedGame = {
+        ...currentGames[gameIndex],
+        ...updates,
+        updated_at: new Date().toISOString()
+      };
+
+      currentGames[gameIndex] = updatedGame;
+      demoData.setTenantGames(tenantId, currentGames);
+
+      return updatedGame;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tenant-games", variables.tenantId] });
       toast({
         title: "Juego actualizado",
-        description: "El juego se ha actualizado correctamente.",
+        description: "El juego se ha actualizado correctamente (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -193,18 +202,15 @@ export function useDeleteTenantGame() {
 
   return useMutation({
     mutationFn: async ({ id, tenantId }: { id: string; tenantId: string }) => {
-      const { error } = await supabase
-        .from("tenant_games")
-        .delete()
-        .eq("id", id);
-      
-      if (error) throw error;
+      const currentGames = demoData.getTenantGames(tenantId);
+      const filteredGames = currentGames.filter((g: TenantGame) => g.id !== id);
+      demoData.setTenantGames(tenantId, filteredGames);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tenant-games", variables.tenantId] });
       toast({
         title: "Juego eliminado",
-        description: "El juego se ha eliminado correctamente.",
+        description: "El juego se ha eliminado correctamente (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
@@ -225,22 +231,24 @@ export function useReorderTenantGames() {
 
   return useMutation({
     mutationFn: async ({ tenantId, updates }: { tenantId: string; updates: { id: string; display_order: number }[] }) => {
-      // Update each game's display_order
-      const promises = updates.map(({ id, display_order }) =>
-        supabase
-          .from("tenant_games")
-          .update({ display_order })
-          .eq("id", id)
-      );
-      const results = await Promise.all(promises);
-      const error = results.find(r => r.error)?.error;
-      if (error) throw error;
+      const currentGames = demoData.getTenantGames(tenantId);
+
+      // Update order in memory
+      updates.forEach(update => {
+        const game = currentGames.find((g: TenantGame) => g.id === update.id);
+        if (game) {
+          game.display_order = update.display_order;
+          game.updated_at = new Date().toISOString();
+        }
+      });
+
+      demoData.setTenantGames(tenantId, currentGames);
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tenant-games", variables.tenantId] });
       toast({
         title: "Orden actualizado",
-        description: "El orden de los juegos se ha guardado.",
+        description: "El orden de los juegos se ha guardado (Modo Demo).",
         className: "bg-green-600 text-white border-none",
       });
     },
